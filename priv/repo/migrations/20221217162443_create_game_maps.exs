@@ -3,13 +3,11 @@ defmodule Overstats.Repo.Migrations.CreateGameMaps do
 
   def change do
     create table(:game_maps) do
-      add :game, references(:games, on_delete: :delete_all)
-      add :map, references(:maps, on_delete: :delete_all)
-
-      timestamps()
+      add :game_id, references(:games, on_delete: :delete_all), null: false
+      add :map_id, references(:maps, on_delete: :delete_all), null: false
     end
 
-    create index(:game_maps, [:game])
-    create index(:game_maps, [:map])
+    create unique_index(:game_maps, [:game_id])
+    create index(:game_maps, [:map_id])
   end
 end

@@ -3,15 +3,13 @@ defmodule Overstats.Repo.Migrations.CreatePlaysOfTheGame do
 
   def change do
     create table(:plays_of_the_game) do
-      add :game, references(:games, on_delete: :delete_all)
-      add :player, references(:players, on_delete: :delete_all)
-      add :hero, references(:heroes, on_delete: :delete_all)
-
-      timestamps()
+      add :game_id, references(:games, on_delete: :delete_all), null: false
+      add :player_id, references(:players, on_delete: :delete_all), null: false
+      add :hero_id, references(:heroes, on_delete: :delete_all), null: false
     end
 
-    create index(:plays_of_the_game, [:game])
-    create index(:plays_of_the_game, [:player])
-    create index(:plays_of_the_game, [:hero])
+    create unique_index(:plays_of_the_game, [:game_id])
+    create index(:plays_of_the_game, [:player_id])
+    create index(:plays_of_the_game, [:hero_id])
   end
 end

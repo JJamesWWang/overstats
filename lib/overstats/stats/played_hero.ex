@@ -6,8 +6,6 @@ defmodule Overstats.Stats.PlayedHero do
     belongs_to :game, Overstats.Games.Game
     belongs_to :player, Overstats.Players.Player
     belongs_to :hero, Overstats.Overwatch.Hero
-
-    timestamps()
   end
 
   @doc false
