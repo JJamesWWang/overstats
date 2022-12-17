@@ -3,7 +3,7 @@ defmodule Overstats.Games.Game do
   import Ecto.Changeset
 
   schema "games" do
-    field :type, :string
+    field :mode, :string
 
     timestamps()
   end
@@ -11,7 +11,7 @@ defmodule Overstats.Games.Game do
   @doc false
   def changeset(game, attrs) do
     game
-    |> cast(attrs, [:type])
-    |> validate_required([:type])
+    |> cast(attrs, [:mode])
+    |> validate_required([:mode])
   end
 end

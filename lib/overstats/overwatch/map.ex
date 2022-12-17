@@ -5,8 +5,6 @@ defmodule Overstats.Overwatch.Map do
   schema "maps" do
     field :name, :string
     field :type, :string
-
-    timestamps()
   end
 
   @doc false

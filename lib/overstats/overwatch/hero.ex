@@ -5,8 +5,6 @@ defmodule Overstats.Overwatch.Hero do
   schema "heroes" do
     field :name, :string
     field :role, :string
-
-    timestamps()
   end
 
   @doc false
