@@ -3,10 +3,9 @@ defmodule Overstats.Stats.PlayedHero do
   import Ecto.Changeset
 
   schema "played_heroes" do
-
-    field :game, :id
-    field :player, :id
-    field :hero, :id
+    belongs_to :game, Overstats.Games.Game
+    belongs_to :player, Overstats.Players.Player
+    belongs_to :hero, Overstats.Overwatch.Hero
 
     timestamps()
   end

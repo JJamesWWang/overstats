@@ -3,11 +3,9 @@ defmodule Overstats.Stats.GameMap do
   import Ecto.Changeset
 
   schema "game_maps" do
-
-    field :game, :id
-    field :map, :id
-
-    timestamps()
+    
+    belongs_to :game, Overstats.Games.Game
+    belongs_to :map, Overstats.Overwatch.Map
   end
 
   @doc false

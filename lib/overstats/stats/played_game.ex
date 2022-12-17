@@ -3,11 +3,10 @@ defmodule Overstats.Stats.PlayedGame do
   import Ecto.Changeset
 
   schema "played_games" do
-    field :won?, :boolean, default: false
-    field :game, :id
-    field :player, :id
+    field :won?, :boolean
 
-    timestamps()
+    belongs_to :game, Overstats.Games.Game
+    belongs_to :player, Overstats.Players.Player
   end
 
   @doc false
