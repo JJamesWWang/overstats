@@ -30,6 +30,8 @@ defmodule Overstats.StatsTest do
 
       assert {:ok, %PlayedGame{} = played_game} = Stats.create_played_game(valid_attrs)
       assert played_game.won? == true
+      assert played_game.game_id == game.id
+      assert played_game.player_id == player.id
     end
 
     test "create_played_game/1 with invalid data returns error changeset" do
@@ -99,10 +101,13 @@ defmodule Overstats.StatsTest do
 
     test "update_played_hero/2 with valid data updates the played_hero" do
       played_hero = played_hero_fixture()
-      update_attrs = %{}
+      hero = OverwatchFixtures.hero_fixture()
+      update_attrs = %{hero_id: hero.id}
 
       assert {:ok, %PlayedHero{} = played_hero} =
                Stats.update_played_hero(played_hero, update_attrs)
+
+      assert played_hero.hero_id == hero.id
     end
 
     test "update_played_hero/2 with invalid data returns error changeset" do
@@ -148,6 +153,10 @@ defmodule Overstats.StatsTest do
 
       assert {:ok, %PlayOfTheGame{} = play_of_the_game} =
                Stats.create_play_of_the_game(valid_attrs)
+
+      assert play_of_the_game.game_id == game.id
+      assert play_of_the_game.player_id == player.id
+      assert play_of_the_game.hero_id == hero.id
     end
 
     test "create_play_of_the_game/1 with invalid data returns error changeset" do
@@ -156,10 +165,13 @@ defmodule Overstats.StatsTest do
 
     test "update_play_of_the_game/2 with valid data updates the play_of_the_game" do
       play_of_the_game = play_of_the_game_fixture()
-      update_attrs = %{}
+      hero = OverwatchFixtures.hero_fixture()
+      update_attrs = %{hero_id: hero.id}
 
       assert {:ok, %PlayOfTheGame{} = play_of_the_game} =
                Stats.update_play_of_the_game(play_of_the_game, update_attrs)
+
+      assert play_of_the_game.hero_id == hero.id
     end
 
     test "update_play_of_the_game/2 with invalid data returns error changeset" do
@@ -206,6 +218,8 @@ defmodule Overstats.StatsTest do
       valid_attrs = %{game_id: game.id, map_id: map.id}
 
       assert {:ok, %GameMap{} = game_map} = Stats.create_game_map(valid_attrs)
+      assert game_map.game_id == game.id
+      assert game_map.map_id == map.id
     end
 
     test "create_game_map/1 with invalid data returns error changeset" do
@@ -214,9 +228,11 @@ defmodule Overstats.StatsTest do
 
     test "update_game_map/2 with valid data updates the game_map" do
       game_map = game_map_fixture()
-      update_attrs = %{}
+      map = OverwatchFixtures.map_fixture()
+      update_attrs = %{map_id: map.id}
 
       assert {:ok, %GameMap{} = game_map} = Stats.update_game_map(game_map, update_attrs)
+      assert game_map.map_id == map.id
     end
 
     test "update_game_map/2 with invalid data returns error changeset" do
