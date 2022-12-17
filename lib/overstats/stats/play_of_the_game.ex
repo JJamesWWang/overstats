@@ -11,7 +11,10 @@ defmodule Overstats.Stats.PlayOfTheGame do
   @doc false
   def changeset(play_of_the_game, attrs) do
     play_of_the_game
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:game_id, :player_id, :hero_id])
+    |> validate_required([:game_id, :player_id, :hero_id])
+    |> assoc_constraint(:game)
+    |> assoc_constraint(:player)
+    |> assoc_constraint(:hero)
   end
 end

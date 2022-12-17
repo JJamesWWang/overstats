@@ -10,7 +10,9 @@ defmodule Overstats.Stats.GameMap do
   @doc false
   def changeset(game_map, attrs) do
     game_map
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:game_id, :map_id])
+    |> validate_required([:game_id, :map_id])
+    |> assoc_constraint(:game)
+    |> assoc_constraint(:map)
   end
 end
