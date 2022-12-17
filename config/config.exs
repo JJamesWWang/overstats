@@ -7,17 +7,17 @@
 # General application configuration
 import Config
 
-config :petal_boilerplate,
-  ecto_repos: [PetalBoilerplate.Repo]
+config :overstats,
+  ecto_repos: [OverStats.Repo]
 
 # Configures the endpoint
-config :petal_boilerplate, PetalBoilerplateWeb.Endpoint,
+config :overstats, OverStatsWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [
-    formats: [html: PetalBoilerplateWeb.ErrorHTML, json: PetalBoilerplateWeb.ErrorJSON],
+    formats: [html: OverStatsWeb.ErrorHTML, json: OverStatsWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: PetalBoilerplate.PubSub,
+  pubsub_server: OverStats.PubSub,
   live_view: [signing_salt: "Nwp6Nmtc"]
 
 # Configures the mailer
@@ -27,7 +27,7 @@ config :petal_boilerplate, PetalBoilerplateWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :petal_boilerplate, PetalBoilerplate.Mailer, adapter: Swoosh.Adapters.Local
+config :overstats, OverStats.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,
@@ -61,7 +61,7 @@ config :phoenix, :json_library, Jason
 
 config :petal_components,
        :error_translator_function,
-       {PetalBoilerplateWeb.CoreComponents, :translate_error}
+       {OverStatsWeb.CoreComponents, :translate_error}
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

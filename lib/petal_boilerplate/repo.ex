@@ -1,5 +1,5 @@
-defmodule PetalBoilerplate.Repo do
+defmodule OverStats.Repo do
   use Ecto.Repo,
-    otp_app: :petal_boilerplate,
-    adapter: Ecto.Adapters.Postgres
+    otp_app: :overstats,
+    adapter: Ecto.Adapters.MyXQL
 end

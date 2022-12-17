@@ -1,3 +1,3 @@
-defmodule PetalBoilerplate.Mailer do
-  use Swoosh.Mailer, otp_app: :petal_boilerplate
+defmodule OverStats.Mailer do
+  use Swoosh.Mailer, otp_app: :overstats
 end

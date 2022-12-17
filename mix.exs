@@ -1,9 +1,9 @@
-defmodule PetalBoilerplate.MixProject do
+defmodule OverStats.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :petal_boilerplate,
+      app: :overstats,
       version: "0.1.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -18,7 +18,7 @@ defmodule PetalBoilerplate.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {PetalBoilerplate.Application, []},
+      mod: {OverStats.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -35,7 +35,7 @@ defmodule PetalBoilerplate.MixProject do
       {:phoenix, "~> 1.7.0-rc.0", override: true},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},
-      {:postgrex, ">= 0.0.0"},
+      {:myxql, ">= 0.0.0"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.18.3"},

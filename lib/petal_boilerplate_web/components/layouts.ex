@@ -1,5 +1,5 @@
-defmodule PetalBoilerplateWeb.Layouts do
-  use PetalBoilerplateWeb, :html
+defmodule OverStatsWeb.Layouts do
+  use OverStatsWeb, :html
 
   embed_templates "layouts/*"
 end

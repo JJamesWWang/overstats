@@ -1,12 +1,12 @@
-defmodule PetalBoilerplateWeb.ErrorHTML do
-  use PetalBoilerplateWeb, :html
+defmodule OverStatsWeb.ErrorHTML do
+  use OverStatsWeb, :html
 
   # If you want to customize your error pages,
   # uncomment the embed_templates/1 call below
   # and add pages to the error directory:
   #
-  #   * lib/petal_boilerplate_web/controllers/error/404.html.heex
-  #   * lib/petal_boilerplate_web/controllers/error/500.html.heex
+  #   * lib/overstats_web/controllers/error/404.html.heex
+  #   * lib/overstats_web/controllers/error/500.html.heex
   #
   # embed_templates "error/*"
 
