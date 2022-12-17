@@ -1,0 +1,19 @@
+defmodule Overstats.Stats.PlayedGame do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  schema "played_games" do
+    field :won?, :boolean, default: false
+    field :game, :id
+    field :player, :id
+
+    timestamps()
+  end
+
+  @doc false
+  def changeset(played_game, attrs) do
+    played_game
+    |> cast(attrs, [:won?])
+    |> validate_required([:won?])
+  end
+end
