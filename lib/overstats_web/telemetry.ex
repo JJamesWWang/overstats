@@ -1,4 +1,4 @@
-defmodule OverStatsWeb.Telemetry do
+defmodule OverstatsWeb.Telemetry do
   use Supervisor
   import Telemetry.Metrics
 
@@ -86,7 +86,7 @@ defmodule OverStatsWeb.Telemetry do
     [
       # A module, function and arguments to be invoked periodically.
       # This function must call :telemetry.execute/3 and a metric must be added above.
-      # {OverStatsWeb, :count_users, []}
+      # {OverstatsWeb, :count_users, []}
     ]
   end
 end

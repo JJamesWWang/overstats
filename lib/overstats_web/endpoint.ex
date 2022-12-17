@@ -1,4 +1,4 @@
-defmodule OverStatsWeb.Endpoint do
+defmodule OverstatsWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :overstats
 
   # The session will be stored in the cookie and signed,
@@ -21,7 +21,7 @@ defmodule OverStatsWeb.Endpoint do
     at: "/",
     from: :overstats,
     gzip: false,
-    only: OverStatsWeb.static_paths()
+    only: OverstatsWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -47,5 +47,5 @@ defmodule OverStatsWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug OverStatsWeb.Router
+  plug OverstatsWeb.Router
 end

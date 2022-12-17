@@ -1,5 +1,5 @@
-defmodule OverStatsWeb.PageLive do
-  use OverStatsWeb, :live_view
+defmodule OverstatsWeb.PageLive do
+  use OverstatsWeb, :live_view
 
   @impl true
   def mount(_params, _session, socket) do

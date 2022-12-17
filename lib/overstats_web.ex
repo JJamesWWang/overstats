@@ -1,12 +1,12 @@
-defmodule OverStatsWeb do
+defmodule OverstatsWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, components, channels, and so on.
 
   This can be used in your application as:
 
-      use OverStatsWeb, :controller
-      use OverStatsWeb, :html
+      use OverstatsWeb, :controller
+      use OverstatsWeb, :html
 
   The definitions below will be executed for every controller,
   component, etc, so keep them short and clean, focused
@@ -39,12 +39,12 @@ defmodule OverStatsWeb do
   def controller do
     quote do
       use Phoenix.Controller,
-        namespace: OverStatsWeb,
+        namespace: OverstatsWeb,
         formats: [:html, :json],
-        layouts: [html: OverStatsWeb.Layouts]
+        layouts: [html: OverstatsWeb.Layouts]
 
       import Plug.Conn
-      import OverStatsWeb.Gettext
+      import OverstatsWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -53,7 +53,7 @@ defmodule OverStatsWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {OverStatsWeb.Layouts, :app}
+        layout: {OverstatsWeb.Layouts, :app}
 
       unquote(html_helpers())
     end
@@ -85,9 +85,9 @@ defmodule OverStatsWeb do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
-      import OverStatsWeb.CoreComponents
+      import OverstatsWeb.CoreComponents
       use PetalComponents
-      import OverStatsWeb.Gettext
+      import OverstatsWeb.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
@@ -100,9 +100,9 @@ defmodule OverStatsWeb do
   def verified_routes do
     quote do
       use Phoenix.VerifiedRoutes,
-        endpoint: OverStatsWeb.Endpoint,
-        router: OverStatsWeb.Router,
-        statics: OverStatsWeb.static_paths()
+        endpoint: OverstatsWeb.Endpoint,
+        router: OverstatsWeb.Router,
+        statics: OverstatsWeb.static_paths()
     end
   end
 

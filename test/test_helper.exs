@@ -1,2 +1,2 @@
 ExUnit.start()
-Ecto.Adapters.SQL.Sandbox.mode(OverStats.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(Overstats.Repo, :manual)

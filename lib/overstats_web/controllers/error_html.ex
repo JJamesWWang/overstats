@@ -1,5 +1,5 @@
-defmodule OverStatsWeb.ErrorHTML do
-  use OverStatsWeb, :html
+defmodule OverstatsWeb.ErrorHTML do
+  use OverstatsWeb, :html
 
   # If you want to customize your error pages,
   # uncomment the embed_templates/1 call below

@@ -1,6 +1,6 @@
-defmodule OverStats do
+defmodule Overstats do
   @moduledoc """
-  OverStats keeps the contexts that define your domain
+  Overstats keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless

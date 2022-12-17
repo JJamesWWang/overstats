@@ -8,16 +8,16 @@
 import Config
 
 config :overstats,
-  ecto_repos: [OverStats.Repo]
+  ecto_repos: [Overstats.Repo]
 
 # Configures the endpoint
-config :overstats, OverStatsWeb.Endpoint,
+config :overstats, OverstatsWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [
-    formats: [html: OverStatsWeb.ErrorHTML, json: OverStatsWeb.ErrorJSON],
+    formats: [html: OverstatsWeb.ErrorHTML, json: OverstatsWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: OverStats.PubSub,
+  pubsub_server: Overstats.PubSub,
   live_view: [signing_salt: "Nwp6Nmtc"]
 
 # Configures the mailer
@@ -27,7 +27,7 @@ config :overstats, OverStatsWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :overstats, OverStats.Mailer, adapter: Swoosh.Adapters.Local
+config :overstats, Overstats.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,
@@ -61,7 +61,7 @@ config :phoenix, :json_library, Jason
 
 config :petal_components,
        :error_translator_function,
-       {OverStatsWeb.CoreComponents, :translate_error}
+       {OverstatsWeb.CoreComponents, :translate_error}
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

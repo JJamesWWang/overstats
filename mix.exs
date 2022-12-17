@@ -1,4 +1,4 @@
-defmodule OverStats.MixProject do
+defmodule Overstats.MixProject do
   use Mix.Project
 
   def project do
@@ -18,7 +18,7 @@ defmodule OverStats.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {OverStats.Application, []},
+      mod: {Overstats.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

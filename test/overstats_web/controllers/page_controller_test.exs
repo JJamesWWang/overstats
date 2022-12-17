@@ -1,5 +1,5 @@
-defmodule OverStatsWeb.PageControllerTest do
-  use OverStatsWeb.ConnCase
+defmodule OverstatsWeb.PageControllerTest do
+  use OverstatsWeb.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")

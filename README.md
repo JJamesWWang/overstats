@@ -1,6 +1,7 @@
 # Petal Boilerplate
 
 A clean install of the Phoenix 1.7 (RC) along with:
+
 - Alpine JS - using a CDN to avoid needing `node_modules`
 - 🌺 [Petal Components Library](https://github.com/petalframework/petal_components)
 
@@ -29,7 +30,5 @@ Petal Pro currently comes with a generator to build CRUD interfaces with Petal C
 
 ## Renaming your project
 
-Your app module is currently called `OverStats`. There is a script file included that will rename your project to anything you like in one go.
+Your app module is currently called `Overstats`. There is a script file included that will rename your project to anything you like in one go.
 Open the file `rename_phoenix_project.sh` and read the instructions at the top.
-
-

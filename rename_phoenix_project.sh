@@ -5,7 +5,7 @@ export LANG=C
 # How to run:
 # 1. Ensure you've checked your files into a git repo (`git init .`, `git add -A`, `git commit -m 'first'`)
 # 2. Modify these two values to your new app name
-NEW_NAME="OverStats"
+NEW_NAME="Overstats"
 NEW_OTP="overstats"
 # 3. Execute the script in terminal: `sh rename_phoenix_project.sh`
 

@@ -1,4 +1,4 @@
-defmodule OverStats.Application do
+defmodule Overstats.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -9,22 +9,22 @@ defmodule OverStats.Application do
   def start(_type, _args) do
     children = [
       # Start the Telemetry supervisor
-      OverStatsWeb.Telemetry,
+      OverstatsWeb.Telemetry,
       # Start the Ecto repository
-      OverStats.Repo,
+      Overstats.Repo,
       # Start the PubSub system
-      {Phoenix.PubSub, name: OverStats.PubSub},
+      {Phoenix.PubSub, name: Overstats.PubSub},
       # Start Finch
-      {Finch, name: OverStats.Finch},
+      {Finch, name: Overstats.Finch},
       # Start the Endpoint (http/https)
-      OverStatsWeb.Endpoint
-      # Start a worker by calling: OverStats.Worker.start_link(arg)
-      # {OverStats.Worker, arg}
+      OverstatsWeb.Endpoint
+      # Start a worker by calling: Overstats.Worker.start_link(arg)
+      # {Overstats.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: OverStats.Supervisor]
+    opts = [strategy: :one_for_one, name: Overstats.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
@@ -32,7 +32,7 @@ defmodule OverStats.Application do
   # whenever the application is updated.
   @impl true
   def config_change(changed, _new, removed) do
-    OverStatsWeb.Endpoint.config_change(changed, removed)
+    OverstatsWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 end
