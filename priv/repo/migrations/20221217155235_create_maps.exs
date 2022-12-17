@@ -6,5 +6,7 @@ defmodule Overstats.Repo.Migrations.CreateMaps do
       add :name, :string
       add :type, :string
     end
+
+    create unique_index(:maps, [:name])
   end
 end

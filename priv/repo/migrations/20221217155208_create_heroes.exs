@@ -6,5 +6,7 @@ defmodule Overstats.Repo.Migrations.CreateHeroes do
       add :name, :string
       add :role, :string
     end
+
+    create unique_index(:heroes, [:name])
   end
 end
