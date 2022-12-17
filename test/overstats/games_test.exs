@@ -8,7 +8,7 @@ defmodule Overstats.GamesTest do
 
     import Overstats.GamesFixtures
 
-    @invalid_attrs %{type: nil}
+    @invalid_attrs %{mode: nil}
 
     test "list_games/0 returns all games" do
       game = game_fixture()
@@ -21,10 +21,10 @@ defmodule Overstats.GamesTest do
     end
 
     test "create_game/1 with valid data creates a game" do
-      valid_attrs = %{type: "some type"}
+      valid_attrs = %{mode: "some mode"}
 
       assert {:ok, %Game{} = game} = Games.create_game(valid_attrs)
-      assert game.type == "some type"
+      assert game.mode == "some mode"
     end
 
     test "create_game/1 with invalid data returns error changeset" do
@@ -33,10 +33,10 @@ defmodule Overstats.GamesTest do
 
     test "update_game/2 with valid data updates the game" do
       game = game_fixture()
-      update_attrs = %{type: "some updated type"}
+      update_attrs = %{mode: "some updated mode"}
 
       assert {:ok, %Game{} = game} = Games.update_game(game, update_attrs)
-      assert game.type == "some updated type"
+      assert game.mode == "some updated mode"
     end
 
     test "update_game/2 with invalid data returns error changeset" do

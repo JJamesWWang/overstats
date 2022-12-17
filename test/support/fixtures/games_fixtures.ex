@@ -11,7 +11,7 @@ defmodule Overstats.GamesFixtures do
     {:ok, game} =
       attrs
       |> Enum.into(%{
-        type: "some type"
+        mode: "some mode"
       })
       |> Overstats.Games.create_game()
 
