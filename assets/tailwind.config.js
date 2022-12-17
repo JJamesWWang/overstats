@@ -15,8 +15,8 @@ module.exports = {
     extend: {
       colors: {
         brand: "#FD4F00",
-        primary: colors.blue,
-        secondary: colors.pink,
+        primary: colors.orange,
+        secondary: colors.indigo,
       },
     },
   },
@@ -27,10 +27,7 @@ module.exports = {
       addVariant("phx-no-feedback", [".phx-no-feedback&", ".phx-no-feedback &"])
     ),
     plugin(({ addVariant }) =>
-      addVariant("phx-click-loading", [
-        ".phx-click-loading&",
-        ".phx-click-loading &",
-      ])
+      addVariant("phx-click-loading", [".phx-click-loading&", ".phx-click-loading &"])
     ),
     plugin(({ addVariant }) =>
       addVariant("phx-submit-loading", [
