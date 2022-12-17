@@ -3,9 +3,9 @@ defmodule Overstats.Repo.Migrations.CreatePlayedHeroes do
 
   def change do
     create table(:played_heroes) do
-      add :game, references(:games, on_delete: :nothing)
-      add :player, references(:players, on_delete: :nothing)
-      add :hero, references(:heroes, on_delete: :nothing)
+      add :game, references(:games, on_delete: :delete_all)
+      add :player, references(:players, on_delete: :delete_all)
+      add :hero, references(:heroes, on_delete: :delete_all)
 
       timestamps()
     end

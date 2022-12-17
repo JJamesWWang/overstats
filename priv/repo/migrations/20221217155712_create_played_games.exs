@@ -4,8 +4,8 @@ defmodule Overstats.Repo.Migrations.CreatePlayedGames do
   def change do
     create table(:played_games) do
       add :won?, :boolean, null: false
-      add :game, references(:games, on_delete: :nothing)
-      add :player, references(:players, on_delete: :nothing)
+      add :game, references(:games, on_delete: :delete_all)
+      add :player, references(:players, on_delete: :delete_all)
 
       timestamps()
     end

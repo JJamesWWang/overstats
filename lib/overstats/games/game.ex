@@ -4,7 +4,6 @@ defmodule Overstats.Games.Game do
 
   schema "games" do
     field :type, :string
-    field :map, :id
 
     timestamps()
   end
