@@ -34,8 +34,8 @@ defmodule OverstatsWeb.Header do
         </div>
         <div class="flex flex-1 justify-between items-center">
           <div />
-          <.header_item current_page?={games?} to={~p"/games/index"} label="Games" />
-          <.header_item current_page?={players?} to={~p"/players/index"} label="Players" />
+          <.header_item current_page?={games?} to={~p"/games"} label="Games" />
+          <.header_item current_page?={players?} to={~p"/players"} label="Players" />
           <.header_item current_page?={stats?} to={~p"/stats"} label="Stats" />
           <div />
         </div>

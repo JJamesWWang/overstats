@@ -23,15 +23,9 @@ defmodule OverstatsWeb.Router do
     live "/live/slide_over/:origin", PageLive, :slide_over
     live "/live/pagination/:page", PageLive, :pagination
 
-    live "/games/index", GamesLive, :index
-    live "/games/new", GamesLive, :new
-    live "/games/edit", GamesLive, :edit
-
-    live "/players/index", PlayersLive, :index
-    live "/players/new", PlayersLive, :new
-    live "/players/edit", PlayersLive, :edit
-
-    live "/stats", StatsLive, :index
+    live "/games", GamesLive
+    live "/players", PlayersLive
+    live "/stats", StatsLive
   end
 
   # Other scopes may use custom stacks.

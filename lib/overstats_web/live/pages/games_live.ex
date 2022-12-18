@@ -8,11 +8,6 @@ defmodule OverstatsWeb.GamesLive do
   end
 
   @impl true
-  def handle_params(params, _uri, socket) do
-    {:noreply, socket}
-  end
-
-  @impl true
   def render(assigns) do
     ~H"""
     <Header.render page="games" />

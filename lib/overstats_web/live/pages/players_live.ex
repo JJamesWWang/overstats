@@ -7,10 +7,6 @@ defmodule OverstatsWeb.PlayersLive do
     {:ok, socket}
   end
 
-  @impl true
-  def handle_params(params, _uri, socket) do
-    {:noreply, socket}
-  end
 
   @impl true
   def render(assigns) do
@@ -19,6 +15,9 @@ defmodule OverstatsWeb.PlayersLive do
     <.container max_width="lg">
       <.h2>Players</.h2>
     </.container>
+    <%= if @live_action == :index do %>
+      <.p>Hello</.p>
+    <% end %>
     """
   end
 end
