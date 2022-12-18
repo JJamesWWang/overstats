@@ -14,5 +14,6 @@ defmodule Overstats.Stats.GameMap do
     |> validate_required([:game_id, :map_id])
     |> assoc_constraint(:game)
     |> assoc_constraint(:map)
+    |> unique_constraint([:game_id])
   end
 end

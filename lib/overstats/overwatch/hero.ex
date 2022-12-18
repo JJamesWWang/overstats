@@ -12,5 +12,6 @@ defmodule Overstats.Overwatch.Hero do
     hero
     |> cast(attrs, [:name, :role])
     |> validate_required([:name, :role])
+    |> unique_constraint(:name)
   end
 end

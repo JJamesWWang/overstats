@@ -16,5 +16,6 @@ defmodule Overstats.Stats.PlayedHero do
     |> assoc_constraint(:game)
     |> assoc_constraint(:player)
     |> assoc_constraint(:hero)
+    |> unique_constraint([:game_id, :player_id, :hero_id])
   end
 end

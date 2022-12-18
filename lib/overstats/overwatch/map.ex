@@ -12,5 +12,6 @@ defmodule Overstats.Overwatch.Map do
     map
     |> cast(attrs, [:name, :type])
     |> validate_required([:name, :type])
+    |> unique_constraint(:name)
   end
 end

@@ -16,5 +16,6 @@ defmodule Overstats.Stats.PlayedGame do
     |> validate_required([:won?, :game_id, :player_id])
     |> assoc_constraint(:game)
     |> assoc_constraint(:player)
+    |> unique_constraint([:game_id, :player_id])
   end
 end
