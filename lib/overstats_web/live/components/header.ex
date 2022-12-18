@@ -26,8 +26,11 @@ defmodule OverstatsWeb.Header do
     <.container max_width="lg">
       <nav class="sticky flex items-center justify-between w-full h-16 bg-white dark:bg-gray-900 my-6">
         <div class="flex">
-          <.h2 class="mb-0 mr-4">Overstats</.h2>
-          <.color_scheme_switch />
+          <span class="text-primary-600 dark:text-primary-400 text-3xl font-bold">Over</span>
+          <span class="text-secondary-600 dark:text-secondary-400 text-3xl font-bold">stats</span>
+          <div class="ml-2">
+            <.color_scheme_switch />
+          </div>
         </div>
         <div class="flex flex-1 justify-between items-center">
           <div />

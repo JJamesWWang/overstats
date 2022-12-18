@@ -1,5 +1,6 @@
 defmodule OverstatsWeb.StatsLive do
   use OverstatsWeb, :live_view
+  alias OverstatsWeb.Header
 
   @impl true
   def mount(_params, _session, socket) do
@@ -14,7 +15,10 @@ defmodule OverstatsWeb.StatsLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.h1>Stats</.h1>
+    <Header.render page="stats" />
+    <.container max_width="lg">
+      <.h2>Stats</.h2>
+    </.container>
     """
   end
 end

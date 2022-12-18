@@ -17,7 +17,7 @@ defmodule OverstatsWeb.GamesLive do
     ~H"""
     <Header.render page="games" />
     <.container max_width="lg">
-      <.h1>Games</.h1>
+      <.h2>Games</.h2>
     </.container>
     """
   end
