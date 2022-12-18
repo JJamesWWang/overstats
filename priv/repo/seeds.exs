@@ -11,8 +11,8 @@
 # and so on) as they will fail if something goes wrong.
 
 alias Overstats.Repo
-alias Overstats.Overwatch.Hero
-alias Overstats.Overwatch.Map
+alias Overstats.Overwatch.{Hero, Map}
+alias Overstats.Players.Player
 
 
 # Insert all heroes and their role
@@ -86,3 +86,7 @@ Repo.insert(%Map{name: "Oasis", type: "Control"} |> Map.changeset(%{}))
 Repo.insert(%Map{name: "Colosseo", type: "Push"} |> Map.changeset(%{}))
 Repo.insert(%Map{name: "Esperança", type: "Push"} |> Map.changeset(%{}))
 Repo.insert(%Map{name: "New Queen Street", type: "Push"} |> Map.changeset(%{}))
+
+
+# Insert unique player for randomly-matched players
+Repo.insert(%Player{name: "Random"} |> Player.changeset(%{}))
