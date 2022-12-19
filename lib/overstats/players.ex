@@ -9,7 +9,7 @@ defmodule Overstats.Players do
   alias Overstats.Players.Player
 
   @doc """
-  Returns the list of players.
+  Returns the list of players, excluding the 'Random' player.
 
   ## Examples
 
@@ -19,7 +19,20 @@ defmodule Overstats.Players do
   """
   def list_players do
     Repo.all(Player)
+    |> Enum.reject(&(&1.name == "Random"))
   end
+
+  @doc """
+  Gets a single player.
+
+  ## Examples
+        iex> get_player(123)
+        {:ok, %Player{}}
+
+        iex> get_player(456)
+        {:error, %Ecto.Changeset{}}
+  """
+  def get_player(id), do: Repo.get(Player, id)
 
   @doc """
   Gets a single player.
@@ -86,7 +99,11 @@ defmodule Overstats.Players do
 
   """
   def delete_player(%Player{} = player) do
-    Repo.delete(player)
+    if player.name == "Random" do
+      {:error, "Cannot delete the 'Random' player"}
+    else
+      Repo.delete(player)
+    end
   end
 
   @doc """
@@ -100,5 +117,17 @@ defmodule Overstats.Players do
   """
   def change_player(%Player{} = player, attrs \\ %{}) do
     Player.changeset(player, attrs)
+  end
+
+  @doc """
+  Returns an empty %Player{} struct.
+
+  ## Examples
+
+      iex> new_player()
+      %Player{}
+  """
+  def new_player() do
+    %Player{}
   end
 end

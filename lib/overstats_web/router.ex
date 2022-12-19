@@ -24,7 +24,8 @@ defmodule OverstatsWeb.Router do
     live "/live/pagination/:page", PageLive, :pagination
 
     live "/games", GamesLive
-    live "/players", PlayersLive
+    live "/players/delete/:id", PlayersLive, :delete
+    live "/players", PlayersLive, :index
     live "/stats", StatsLive
   end
 
