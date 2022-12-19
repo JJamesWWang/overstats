@@ -101,4 +101,16 @@ defmodule Overstats.Games do
   def change_game(%Game{} = game, attrs \\ %{}) do
     Game.changeset(game, attrs)
   end
+  
+  @doc """
+  Returns the list of supported game modes.
+
+  ## Examples
+
+      iex> list_game_modes()
+      ["Competitive", "Quick Play"]
+  """
+  def list_game_modes() do
+    ["Competitive", "Quick Play"]
+  end
 end
