@@ -14,9 +14,9 @@ defmodule OverstatsWeb.GamesLive do
      |> assign(all_heroes: Overwatch.list_heroes())
      |> assign(all_roles: Overwatch.list_roles())
      # list of player names
-     |> assign(roles?: false)
+     |> assign(roles?: true)
      |> assign(player_names: [])
-     |> assign(player_roles: [])
+     |> assign(player_roles: %{})
      # map from player name to list of heroes played
      |> assign(player_heroes: %{})
      |> assign(potg_player: nil)}
@@ -101,23 +101,31 @@ defmodule OverstatsWeb.GamesLive do
         all_game_modes={@all_game_modes}
         all_maps={@all_maps}
         all_players={@all_players}
-        player_names={@player_names}
-      />
-      <.player_roles_form all_roles={@all_roles} roles?={@roles?} player_names={@player_names} />
-
-      <.player_heroes_form
-        all_heroes={@all_heroes}
-        player_names={@player_names}
         roles?={@roles?}
-        player_roles={@player_roles}
+        player_names={@player_names}
       />
 
-      <.potg_data_form
-        all_heroes={@all_heroes}
-        player_names={@player_names}
-        player_heroes={@player_heroes}
-        potg_player={@potg_player}
-      />
+      <%= if @roles? and @player_names != [] do %>
+        <.player_roles_form all_roles={@all_roles} player_names={@player_names} />
+      <% end %>
+
+      <%= if @player_names != [] and (not @roles? or @player_roles != %{}) do %>
+        <.player_heroes_form
+          all_heroes={@all_heroes}
+          roles?={@roles?}
+          player_names={@player_names}
+          player_roles={@player_roles}
+        />
+      <% end %>
+
+      <%= if @player_heroes != %{} do %>
+        <.potg_data_form
+          all_heroes={@all_heroes}
+          player_names={@player_names}
+          player_heroes={@player_heroes}
+          potg_player={@potg_player}
+        />
+      <% end %>
 
       <%!-- <.h4>Opposing Team (optional)</.h4>
           <.form_field

@@ -31,7 +31,7 @@ defmodule OverstatsWeb.GamesLive.Forms do
 
       <div>
         <.form_label form={f} field={:roles?} />
-        <.switch checked form={f} field={:roles?} />
+        <.switch checked={@roles?} form={f} field={:roles?} />
         <.form_field_error form={f} field={:roles?} />
       </div>
 
@@ -59,118 +59,114 @@ defmodule OverstatsWeb.GamesLive.Forms do
   # hard code the 5 fields here. This cannot be refactored any more effectively.
   def player_roles_form(assigns) do
     ~H"""
-    <%= if @roles? do %>
-      <.form
-        :let={f}
-        for={:player_roles}
-        phx-submit="player_roles_submit"
-        class="flex flex-col items-start mt-4 gap-y-4"
-      >
-        <%= if Enum.count(@player_names) > 0 do %>
-          <div>
-            <.h4 class="mt-2">Player <%= Enum.at(@player_names, 0) %></.h4>
-            <.form_field
-              type="radio_group"
-              form={f}
-              field={:player_roles0}
-              layout={:row}
-              label="Role"
-              options={@all_roles |> Enum.map(&{&1, &1})}
-            />
-          </div>
-        <% end %>
-        <%= if Enum.count(@player_names) > 1 do %>
-          <div>
-            <.h4>Player <%= Enum.at(@player_names, 1) %></.h4>
-            <.form_field
-              type="radio_group"
-              form={f}
-              field={:player_roles1}
-              layout={:row}
-              label="Role"
-              options={@all_roles |> Enum.map(&{&1, &1})}
-            />
-          </div>
-        <% end %>
-        <%= if Enum.count(@player_names) > 2 do %>
-          <div>
-            <.h4>Player <%= Enum.at(@player_names, 2) %></.h4>
-            <.form_field
-              type="radio_group"
-              form={f}
-              field={:player_roles2}
-              layout={:row}
-              label="Role"
-              options={@all_roles |> Enum.map(&{&1, &1})}
-            />
-          </div>
-        <% end %>
-        <%= if Enum.count(@player_names) > 3 do %>
-          <div>
-            <.h4>Player <%= Enum.at(@player_names, 3) %></.h4>
-            <.form_field
-              type="radio_group"
-              form={f}
-              field={:player_roles3}
-              layout={:row}
-              label="Role"
-              options={@all_roles |> Enum.map(&{&1, &1})}
-            />
-          </div>
-        <% end %>
-        <%= if Enum.count(@player_names) > 4 do %>
-          <div>
-            <.h4>Player <%= Enum.at(@player_names, 4) %></.h4>
-            <.form_field
-              type="radio_group"
-              form={f}
-              field={:player_roles4}
-              layout={:row}
-              label="Role"
-              options={@all_roles |> Enum.map(&{&1, &1})}
-            />
-          </div>
-        <% end %>
-        <.button class="submit" label="Continue" />
-      </.form>
-    <% end %>
+    <.form
+      :let={f}
+      for={:player_roles}
+      phx-submit="player_roles_submit"
+      class="flex flex-col items-start mt-4 gap-y-4"
+    >
+      <%= if Enum.count(@player_names) > 0 do %>
+        <div>
+          <.h4 class="mt-2">Player <%= Enum.at(@player_names, 0) %></.h4>
+          <.form_field
+            type="radio_group"
+            form={f}
+            field={:player_roles0}
+            layout={:row}
+            label="Role"
+            options={@all_roles |> Enum.map(&{&1, &1})}
+          />
+        </div>
+      <% end %>
+      <%= if Enum.count(@player_names) > 1 do %>
+        <div>
+          <.h4>Player <%= Enum.at(@player_names, 1) %></.h4>
+          <.form_field
+            type="radio_group"
+            form={f}
+            field={:player_roles1}
+            layout={:row}
+            label="Role"
+            options={@all_roles |> Enum.map(&{&1, &1})}
+          />
+        </div>
+      <% end %>
+      <%= if Enum.count(@player_names) > 2 do %>
+        <div>
+          <.h4>Player <%= Enum.at(@player_names, 2) %></.h4>
+          <.form_field
+            type="radio_group"
+            form={f}
+            field={:player_roles2}
+            layout={:row}
+            label="Role"
+            options={@all_roles |> Enum.map(&{&1, &1})}
+          />
+        </div>
+      <% end %>
+      <%= if Enum.count(@player_names) > 3 do %>
+        <div>
+          <.h4>Player <%= Enum.at(@player_names, 3) %></.h4>
+          <.form_field
+            type="radio_group"
+            form={f}
+            field={:player_roles3}
+            layout={:row}
+            label="Role"
+            options={@all_roles |> Enum.map(&{&1, &1})}
+          />
+        </div>
+      <% end %>
+      <%= if Enum.count(@player_names) > 4 do %>
+        <div>
+          <.h4>Player <%= Enum.at(@player_names, 4) %></.h4>
+          <.form_field
+            type="radio_group"
+            form={f}
+            field={:player_roles4}
+            layout={:row}
+            label="Role"
+            options={@all_roles |> Enum.map(&{&1, &1})}
+          />
+        </div>
+      <% end %>
+      <.button class="submit" label="Continue" />
+    </.form>
     """
   end
 
   def player_heroes_form(assigns) do
     ~H"""
-    <%= if @player_names != [] and (not @roles? or @player_roles != []) do %>
-      <.form
-        :let={f}
-        for={:player_heroes}
-        phx-submit="player_heroes_submit"
-        class="flex flex-col items-start mt-4 gap-y-4"
-      >
-        <%= for name <- @player_names do %>
-          <div class="w-full overflow-x-auto">
-            <.h3>Player <%= name %></.h3>
+    <.form
+      :let={f}
+      for={:player_heroes}
+      phx-submit="player_heroes_submit"
+      class="flex flex-col items-start mt-4 gap-y-4"
+    >
+      <%= for name <- @player_names do %>
+        <div class="w-full overflow-x-auto">
+          <.h3>Player <%= name %></.h3>
 
-            <.form_field
-              type="checkbox_group"
-              layout={:row}
-              form={f}
-              field={:player_heroes}
-              options={
-                if(@roles?,
-                  do:
-                    @all_heroes
-                    |> heroes_by_role(Map.get(@player_roles, name))
-                    |> heroes_to_options(name),
-                  else: heroes_to_options(@all_heroes, name)
-                )
-              }
-            />
-          </div>
-        <% end %>
+          <.form_field
+            type="checkbox_group"
+            layout={:row}
+            form={f}
+            field={:player_heroes}
+            options={
+              if(@roles?,
+                do:
+                  @all_heroes
+                  |> heroes_by_role(Map.get(@player_roles, name))
+                  |> heroes_to_options(name),
+                else: heroes_to_options(@all_heroes, name)
+              )
+            }
+          />
+        </div>
+      <% end %>
 
-        <.button class="submit mt-4" label="Continue" />
-      </.form>
-    <% end %>
+      <.button class="submit mt-4" label="Continue" />
+    </.form>
     """
   end
 
@@ -184,30 +180,28 @@ defmodule OverstatsWeb.GamesLive.Forms do
 
   def potg_data_form(assigns) do
     ~H"""
-    <%= if @player_heroes != %{} do %>
-      <.form
-        :let={f}
-        for={:potg_data}
-        phx-change="potg_data_change"
-        phx-submit="potg_data_submit"
-        class="flex flex-col mt-4 gap-y-4"
-      >
-        <.h4>Play of the Game (optional)</.h4>
+    <.form
+      :let={f}
+      for={:potg_data}
+      phx-change="potg_data_change"
+      phx-submit="potg_data_submit"
+      class="flex flex-col mt-4 gap-y-4"
+    >
+      <.h4>Play of the Game (optional)</.h4>
 
-        <.form_label form={f} field={:potg_player} label="Player of the Game" />
-        <.select options={@player_names} form={f} field={:potg_player} />
-        <.form_field_error form={f} field={:potg_player} />
+      <.form_label form={f} field={:potg_player} label="Player of the Game" />
+      <.select options={@player_names} form={f} field={:potg_player} />
+      <.form_field_error form={f} field={:potg_player} />
 
-        <.form_label form={f} field={:potg_hero} label="Hero Played" />
-        <.select options={Map.get(@player_heroes, @potg_player)} form={f} field={:potg_hero} />
-        <.form_field_error form={f} field={:potg_hero} />
+      <.form_label form={f} field={:potg_hero} label="Hero Played" />
+      <.select options={Map.get(@player_heroes, @potg_player)} form={f} field={:potg_hero} />
+      <.form_field_error form={f} field={:potg_hero} />
 
-        <div class="flex gap-x-4 mt-4">
-          <.button class="" label="Skip" phx-click="potg_skip" color="gray" />
-          <.button class="submit" label="Continue" />
-        </div>
-      </.form>
-    <% end %>
+      <div class="flex gap-x-4 mt-4">
+        <.button class="" label="Skip" phx-click="potg_skip" color="gray" />
+        <.button class="submit" label="Continue" />
+      </div>
+    </.form>
     """
   end
 end
