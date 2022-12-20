@@ -2,6 +2,7 @@ defmodule OverstatsWeb.GamesLive do
   use OverstatsWeb, :live_view
   alias OverstatsWeb.Header
   alias Overstats.{Games, Players, Overwatch}
+  import OverstatsWeb.GamesLive.Forms
 
   @impl true
   def mount(_params, _session, socket) do
@@ -11,8 +12,11 @@ defmodule OverstatsWeb.GamesLive do
      |> assign(all_maps: Overwatch.list_maps())
      |> assign(all_players: Players.list_players())
      |> assign(all_heroes: Overwatch.list_heroes())
+     |> assign(all_roles: Overwatch.list_roles())
      # list of player names
+     |> assign(roles?: false)
      |> assign(player_names: [])
+     |> assign(player_roles: [])
      # map from player name to list of heroes played
      |> assign(player_heroes: %{})
      |> assign(potg_player: nil)}
@@ -21,18 +25,28 @@ defmodule OverstatsWeb.GamesLive do
   @impl true
   def handle_event(
         "game_data_submit",
-        %{"game_data" => %{"player_names" => player_names}},
+        %{"game_data" => %{"player_names" => player_names, "roles?" => roles?}},
         socket
       ) do
     {:noreply,
      socket
+     |> assign(roles?: roles? == "true")
      |> assign(player_names: if(is_list(player_names), do: player_names, else: []))
      |> assign(player_heroes: %{})}
   end
 
   def handle_event(
-        "player_data_submit",
-        %{"player_data" => %{"player_heroes" => player_heroes}},
+        "player_roles_submit",
+        %{"player_roles" => data},
+        %{assigns: %{player_names: player_names}} = socket
+      ) do
+    IO.inspect(map_player_to_roles(player_names, data))
+    {:noreply, socket |> assign(player_roles: map_player_to_roles(player_names, data))}
+  end
+
+  def handle_event(
+        "player_heroes_submit",
+        %{"player_heroes" => %{"player_heroes" => player_heroes}},
         %{assigns: %{player_names: player_names}} = socket
       ) do
     {:noreply,
@@ -60,11 +74,17 @@ defmodule OverstatsWeb.GamesLive do
     {:noreply, socket}
   end
 
+  defp map_player_to_roles(player_names, roles_map) do
+    player_names
+    |> Enum.with_index()
+    |> Map.new(fn {name, i} -> {name, roles_map["player_roles#{i}"]} end)
+  end
+
   defp map_player_to_heroes(player_heroes) do
     player_heroes
-    |> Enum.map(fn s -> String.split(s, "_") end)
-    |> Enum.reduce(%{}, fn [player_name | hero], acc ->
-      Map.update(acc, player_name, hero, fn existing -> hero ++ existing end)
+    |> Enum.map(fn s -> String.split(s, "__") end)
+    |> Enum.reduce(%{}, fn [hero | player_name], acc ->
+      Map.update(acc, player_name |> Enum.join(), [hero], fn existing -> [hero | existing] end)
     end)
   end
 
@@ -83,8 +103,14 @@ defmodule OverstatsWeb.GamesLive do
         all_players={@all_players}
         player_names={@player_names}
       />
+      <.player_roles_form all_roles={@all_roles} roles?={@roles?} player_names={@player_names} />
 
-      <.player_data_form all_heroes={@all_heroes} player_names={@player_names} />
+      <.player_heroes_form
+        all_heroes={@all_heroes}
+        player_names={@player_names}
+        roles?={@roles?}
+        player_roles={@player_roles}
+      />
 
       <.potg_data_form
         all_heroes={@all_heroes}
@@ -102,115 +128,8 @@ defmodule OverstatsWeb.GamesLive do
             options={@all_heroes |> Enum.map(&{&1.name, &1.name})}
           /> --%>
 
-      <.h3 class="mt-3">Game History</.h3>
+      <.h3 class="mt-4">Game History</.h3>
     </.container>
-    """
-  end
-
-  defp game_data_form(assigns) do
-    ~H"""
-    <.form
-      :let={f}
-      for={:game_data}
-      phx-submit="game_data_submit"
-      class="flex flex-col gap-y-2 items-start"
-    >
-      <.h4 class="mt-3">Game Type</.h4>
-
-      <div>
-        <.form_label form={f} field={:mode} />
-        <.select options={@all_game_modes} form={f} field={:mode} />
-        <.form_field_error form={f} field={:mode} />
-      </div>
-
-      <div>
-        <.form_label form={f} field={:map} />
-        <.select options={@all_maps |> Enum.map(& &1.name)} form={f} field={:map} />
-        <.form_field_error form={f} field={:map} />
-      </div>
-
-      <div>
-        <.form_label form={f} field={:won?} />
-        <.switch form={f} field={:won?} />
-        <.form_field_error form={f} field={:won?} />
-      </div>
-
-      <div>
-        <.form_label form={f} field={:roles?} />
-        <.switch checked form={f} field={:roles?} />
-        <.form_field_error form={f} field={:roles?} />
-      </div>
-
-      <.form_field
-        type="checkbox_group"
-        form={f}
-        field={:player_names}
-        options={@all_players |> Enum.map(&{&1.name, &1.name})}
-      />
-
-      <%= if @player_names == [] do %>
-        <.button class="submit" label="Continue" />
-      <% else %>
-        <.button class="submit" label="Reset Players with currently filled" />
-      <% end %>
-    </.form>
-    """
-  end
-
-  defp player_data_form(assigns) do
-    ~H"""
-    <%= if @player_names != [] do %>
-      <.form
-        :let={f}
-        for={:player_data}
-        phx-submit="player_data_submit"
-        class="flex flex-col items-start mt-4 gap-y-4"
-      >
-        <%= for name <- @player_names do %>
-          <div class="w-full overflow-x-auto">
-            <.h3>Player <%= name %></.h3>
-            <.form_field
-              type="checkbox_group"
-              layout={:row}
-              form={f}
-              field={:player_heroes}
-              options={@all_heroes |> Enum.map(&{&1.name, "#{name}_#{&1.name}"})}
-            />
-          </div>
-        <% end %>
-
-        <.button class="submit mt-4" label="Continue" />
-      </.form>
-    <% end %>
-    """
-  end
-
-  defp potg_data_form(assigns) do
-    ~H"""
-    <%= if @player_heroes != %{} do %>
-      <.form
-        :let={f}
-        for={:potg_data}
-        phx-change="potg_data_change"
-        phx-submit="potg_data_submit"
-        class="flex flex-col mt-4 gap-y-4"
-      >
-        <.h4>Play of the Game (optional)</.h4>
-
-        <.form_label form={f} field={:potg_player} label="Player of the Game" />
-        <.select options={@player_names} form={f} field={:potg_player} />
-        <.form_field_error form={f} field={:potg_player} />
-
-        <.form_label form={f} field={:potg_hero} label="Hero Played" />
-        <.select options={Map.get(@player_heroes, @potg_player)} form={f} field={:potg_hero} />
-        <.form_field_error form={f} field={:potg_hero} />
-
-        <div class="flex gap-x-4 mt-4">
-          <.button class="" label="Skip" phx-click="potg_skip" color="gray" />
-          <.button class="submit" label="Continue" />
-        </div>
-      </.form>
-    <% end %>
     """
   end
 end

@@ -22,6 +22,20 @@ defmodule Overstats.Overwatch do
   end
 
   @doc """
+  Returns all unique roles for heroes.
+
+  ## Examples
+
+      iex> list_roles()
+      ["Tank", "Damage", "Support"]
+  """
+  def list_roles do
+    Repo.all(Hero)
+    |> Enum.map(& &1.role)
+    |> Enum.uniq()
+  end
+
+  @doc """
   Gets a single hero.
 
   Raises `Ecto.NoResultsError` if the Hero does not exist.
