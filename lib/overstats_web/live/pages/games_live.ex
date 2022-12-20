@@ -16,6 +16,7 @@ defmodule OverstatsWeb.GamesLive do
      # list of player names
      |> assign(roles?: true)
      |> assign(player_names: [])
+     # map from player name to role
      |> assign(player_roles: %{})
      # map from player name to list of heroes played
      |> assign(player_heroes: %{})
@@ -61,7 +62,7 @@ defmodule OverstatsWeb.GamesLive do
          |> assign(player_roles: %{})
          |> put_flash(
            :error,
-           "Please select a roles according to role queue (1 Tank, 2 Damage, 2 Support)."
+           "Please select roles according to role queue (1 Tank, 2 Damage, 2 Support)."
          )}
 
       true ->
