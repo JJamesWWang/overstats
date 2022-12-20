@@ -3,8 +3,8 @@ defmodule Overstats.Repo.Migrations.CreateMaps do
 
   def change do
     create table(:maps) do
-      add :name, :string
-      add :type, :string
+      add :name, :string, null: false
+      add :type, :string, null: false
     end
 
     create unique_index(:maps, [:name])

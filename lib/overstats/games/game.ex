@@ -4,6 +4,7 @@ defmodule Overstats.Games.Game do
 
   schema "games" do
     field :mode, :string
+    field :role_queue?, :boolean
 
     timestamps()
   end

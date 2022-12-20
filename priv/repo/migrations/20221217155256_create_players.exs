@@ -3,7 +3,7 @@ defmodule Overstats.Repo.Migrations.CreatePlayers do
 
   def change do
     create table(:players) do
-      add :name, :string
+      add :name, :string, null: false
 
       timestamps()
     end

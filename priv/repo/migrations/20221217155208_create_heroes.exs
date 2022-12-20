@@ -3,8 +3,8 @@ defmodule Overstats.Repo.Migrations.CreateHeroes do
 
   def change do
     create table(:heroes) do
-      add :name, :string
-      add :role, :string
+      add :name, :string, null: false
+      add :role, :string, null: false
     end
 
     create unique_index(:heroes, [:name])
