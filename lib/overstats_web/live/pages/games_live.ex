@@ -94,8 +94,8 @@ defmodule OverstatsWeb.GamesLive do
     {:noreply, socket |> assign(potg_player: potg_player)}
   end
 
-  def handle_event("potg_skip", _params, socket) do
-    {:noreply, socket |> assign(potg_player: nil)}
+  def handle_event("potg_skip", _params, %{assigns: %{player_names: player_names}} = socket) do
+    {:noreply, socket |> assign(potg_player: List.first(player_names))}
   end
 
   def handle_event(
