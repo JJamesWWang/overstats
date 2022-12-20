@@ -8,10 +8,14 @@ defmodule Overstats.GamesFixtures do
   Generate a game.
   """
   def game_fixture(attrs \\ %{}) do
+    map = Overstats.OverwatchFixtures.map_fixture()
+
     {:ok, game} =
       attrs
       |> Enum.into(%{
-        mode: "some mode"
+        mode: "some mode",
+        role_queue?: true,
+        map_id: map.id
       })
       |> Overstats.Games.create_game()
 

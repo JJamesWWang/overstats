@@ -35,6 +35,20 @@ defmodule Overstats.Players do
   def get_player(id), do: Repo.get(Player, id)
 
   @doc """
+  Gets a player by name.
+
+  Raises `Ecto.NoResultsError` if the Player does not exist.
+
+  ## Examples
+        iex> get_player_by_name!("Player Name")
+        {:ok, %Player{}}
+
+        iex> get_player_by_name!("Player Name")
+        {:error, %Ecto.Changeset{}}
+  """
+  def get_player_by_name!(name), do: Repo.get_by!(Player, name: name)
+
+  @doc """
   Gets a single player.
 
   Raises `Ecto.NoResultsError` if the Player does not exist.

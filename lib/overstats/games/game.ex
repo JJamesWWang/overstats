@@ -5,6 +5,7 @@ defmodule Overstats.Games.Game do
   schema "games" do
     field :mode, :string
     field :role_queue?, :boolean
+    belongs_to :map, Overstats.Maps.Map
 
     timestamps()
   end
@@ -12,7 +13,8 @@ defmodule Overstats.Games.Game do
   @doc false
   def changeset(game, attrs) do
     game
-    |> cast(attrs, [:mode])
-    |> validate_required([:mode])
+    |> cast(attrs, [:mode, :role_queue?, :map_id])
+    |> validate_required([:mode, :role_queue?, :map_id])
+    |> assoc_constraint(:map)
   end
 end

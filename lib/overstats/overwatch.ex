@@ -52,6 +52,22 @@ defmodule Overstats.Overwatch do
   def get_hero!(id), do: Repo.get!(Hero, id)
 
   @doc """
+  Gets a single hero by name.
+
+  Raises `Ecto.NoResultsError` if the Hero does not exist.
+
+  ## Examples
+
+      iex> get_hero_by_name!("Reaper")
+      %Hero{}
+
+      iex> get_hero_by_name!("Reaper")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_hero_by_name!(name), do: Repo.get_by!(Hero, name: name)
+
+  @doc """
   Creates a hero.
 
   ## Examples
@@ -146,6 +162,21 @@ defmodule Overstats.Overwatch do
 
   """
   def get_map!(id), do: Repo.get!(Map, id)
+
+  @doc """
+  Gets a single map by name.
+
+  Raises `Ecto.NoResultsError` if the Map does not exist.
+
+  ## Examples
+
+      iex> get_map_by_name!("Hanamura")
+      %Map{}
+
+      iex> get_map_by_name!("Hanamura")
+      ** (Ecto.NoResultsError)
+  """
+  def get_map_by_name!(name), do: Repo.get_by!(Map, name: name)
 
   @doc """
   Creates a map.

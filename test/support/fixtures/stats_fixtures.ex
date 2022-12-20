@@ -66,22 +66,4 @@ defmodule Overstats.StatsFixtures do
 
     play_of_the_game
   end
-
-  @doc """
-  Generate a game_map.
-  """
-  def game_map_fixture(attrs \\ %{}) do
-    game = GamesFixtures.game_fixture()
-    map = OverwatchFixtures.map_fixture()
-
-    {:ok, game_map} =
-      attrs
-      |> Enum.into(%{
-        game_id: game.id,
-        map_id: map.id
-      })
-      |> Overstats.Stats.create_game_map()
-
-    game_map
-  end
 end

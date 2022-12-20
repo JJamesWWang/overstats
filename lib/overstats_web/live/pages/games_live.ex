@@ -8,6 +8,7 @@ defmodule OverstatsWeb.GamesLive do
   def mount(_params, _session, socket) do
     {:ok,
      socket
+     |> assign(all_games: Games.list_games())
      |> assign(all_game_modes: Games.list_game_modes())
      |> assign(all_maps: Overwatch.list_maps())
      |> assign(all_players: Players.list_players())
@@ -26,11 +27,22 @@ defmodule OverstatsWeb.GamesLive do
   @impl true
   def handle_event(
         "game_data_submit",
-        %{"game_data" => %{"player_names" => player_names, "roles?" => roles?}},
+        %{
+          "game_data" => %{
+            "mode" => game_mode,
+            "map" => map,
+            "won?" => won?,
+            "player_names" => player_names,
+            "roles?" => roles?
+          }
+        },
         socket
       ) do
     {:noreply,
      socket
+     |> assign(game_mode: game_mode)
+     |> assign(map: map)
+     |> assign(won?: won?)
      |> assign(roles?: roles? == "true")
      |> assign(player_names: if(is_list(player_names), do: player_names, else: []))
      |> assign(player_heroes: %{})}
@@ -44,10 +56,6 @@ defmodule OverstatsWeb.GamesLive do
     roles = map_player_to_roles(player_names, data)
     all_selected? = Map.values(roles) |> Enum.all?(&(&1 != nil))
     valid_selection? = all_selected? and roles_violate_count?(roles)
-
-    IO.puts(all_selected?)
-    IO.puts(valid_selection?)
-    IO.inspect(roles)
 
     cond do
       not all_selected? ->
@@ -95,16 +103,66 @@ defmodule OverstatsWeb.GamesLive do
     {:noreply, socket |> assign(potg_player: potg_player)}
   end
 
-  def handle_event("potg_skip", _params, %{assigns: %{player_names: player_names}} = socket) do
-    {:noreply, socket |> assign(potg_player: List.first(player_names))}
+  def handle_event(
+        "potg_skip",
+        _params,
+        %{
+          assigns: %{
+            game_mode: game_mode,
+            map: map,
+            won?: won?,
+            roles?: roles?,
+            player_heroes: player_heroes
+          }
+        } = socket
+      ) do
+    case Overstats.create_game_with_stats(
+           game_mode,
+           map,
+           won?,
+           roles?,
+           player_heroes,
+           false
+         ) do
+      {:ok} ->
+        {:noreply, socket |> put_flash(:success, "Game created.")}
+
+      {:error, changeset} ->
+        IO.inspect(changeset)
+        {:noreply, socket |> put_flash(:error, "There was an error creating your game.")}
+    end
   end
 
   def handle_event(
         "potg_data_submit",
-        %{"potg_data" => %{"potg_hero" => potg_hero}},
-        socket
+        %{"potg_data" => %{"potg_player" => potg_player, "potg_hero" => potg_hero}},
+        %{
+          assigns: %{
+            game_mode: game_mode,
+            map: map,
+            won?: won?,
+            roles?: roles?,
+            player_heroes: player_heroes
+          }
+        } = socket
       ) do
-    {:noreply, socket}
+    case Overstats.create_game_with_stats(
+           game_mode,
+           map,
+           won?,
+           roles?,
+           player_heroes,
+           true,
+           potg_player,
+           potg_hero
+         ) do
+      {:ok} ->
+        {:noreply, socket |> put_flash(:success, "Game created.")}
+
+      {:error, changeset} ->
+        IO.inspect(changeset)
+        {:noreply, socket |> put_flash(:error, "There was an error creating your game.")}
+    end
   end
 
   defp map_player_to_roles(player_names, roles_map) do
@@ -140,7 +198,6 @@ defmodule OverstatsWeb.GamesLive do
     <Header.render page="games" />
     <.container max_width="lg">
       <.h2>Games</.h2>
-      <.h3>Recent Games</.h3>
 
       <.h3>Add New Game</.h3>
       <.game_data_form
@@ -183,7 +240,20 @@ defmodule OverstatsWeb.GamesLive do
           /> --%>
 
       <.h3 class="mt-4">Game History</.h3>
+      <%= if @all_games != [] do %>
+        <%= for game <- @all_games do %>
+          <.game_history_item game={game} />
+        <% end %>
+      <% else %>
+        <.p>No games found.</.p>
+      <% end %>
     </.container>
+    """
+  end
+
+  defp game_history_item(assigns) do
+    ~H"""
+    <.p><%= @game.mode %> match</.p>
     """
   end
 end

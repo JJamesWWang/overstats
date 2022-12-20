@@ -18,10 +18,6 @@ defmodule OverstatsWeb.Header do
   end
 
   def render(assigns) do
-    games? = assigns[:page] == "games"
-    players? = assigns[:page] == "players"
-    stats? = assigns[:page] == "stats"
-
     ~H"""
     <.container max_width="lg">
       <nav class="sticky flex items-center justify-between w-full h-16 bg-white dark:bg-gray-900 my-6">
@@ -34,9 +30,9 @@ defmodule OverstatsWeb.Header do
         </div>
         <div class="flex flex-1 justify-between items-center">
           <div />
-          <.header_item current_page?={games?} to={~p"/games"} label="Games" />
-          <.header_item current_page?={players?} to={~p"/players"} label="Players" />
-          <.header_item current_page?={stats?} to={~p"/stats"} label="Stats" />
+          <.header_item current_page?={@page == "games"} to={~p"/games"} label="Games" />
+          <.header_item current_page?={@page == "players"} to={~p"/players"} label="Players" />
+          <.header_item current_page?={@page == "stats"} to={~p"/stats"} label="Stats" />
           <div />
         </div>
       </nav>

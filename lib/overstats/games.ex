@@ -101,7 +101,7 @@ defmodule Overstats.Games do
   def change_game(%Game{} = game, attrs \\ %{}) do
     Game.changeset(game, attrs)
   end
-  
+
   @doc """
   Returns the list of supported game modes.
 

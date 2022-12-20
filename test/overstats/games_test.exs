@@ -21,7 +21,8 @@ defmodule Overstats.GamesTest do
     end
 
     test "create_game/1 with valid data creates a game" do
-      valid_attrs = %{mode: "some mode"}
+      map = Overstats.OverwatchFixtures.map_fixture()
+      valid_attrs = %{mode: "some mode", role_queue?: false, map_id: map.id}
 
       assert {:ok, %Game{} = game} = Games.create_game(valid_attrs)
       assert game.mode == "some mode"

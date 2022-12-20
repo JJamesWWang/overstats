@@ -11,7 +11,7 @@ defmodule Overstats.OverwatchFixtures do
     {:ok, hero} =
       attrs
       |> Enum.into(%{
-        name: "some name",
+        name: "some name #{System.unique_integer()}",
         role: "some role"
       })
       |> Overstats.Overwatch.create_hero()
@@ -26,7 +26,7 @@ defmodule Overstats.OverwatchFixtures do
     {:ok, map} =
       attrs
       |> Enum.into(%{
-        name: "some name",
+        name: "some name #{System.unique_integer()}",
         type: "some type"
       })
       |> Overstats.Overwatch.create_map()
