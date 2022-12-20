@@ -40,8 +40,40 @@ defmodule OverstatsWeb.GamesLive do
         %{"player_roles" => data},
         %{assigns: %{player_names: player_names}} = socket
       ) do
-    IO.inspect(map_player_to_roles(player_names, data))
-    {:noreply, socket |> assign(player_roles: map_player_to_roles(player_names, data))}
+    roles = map_player_to_roles(player_names, data)
+    all_selected? = Map.values(roles) |> Enum.all?(&(&1 != nil))
+    valid_selection? = all_selected? and roles_violate_count?(roles)
+
+    IO.puts(all_selected?)
+    IO.puts(valid_selection?)
+    IO.inspect(roles)
+
+    cond do
+      not all_selected? ->
+        {:noreply,
+         socket
+         |> assign(player_roles: %{})
+         |> put_flash(:error, "Please select a role for each player.")}
+
+      not valid_selection? ->
+        {:noreply,
+         socket
+         |> assign(player_roles: %{})
+         |> put_flash(
+           :error,
+           "Please select a roles according to role queue (1 Tank, 2 Damage, 2 Support)."
+         )}
+
+      true ->
+        {:noreply, socket |> assign(player_roles: map_player_to_roles(player_names, data))}
+    end
+  end
+
+  def handle_event("player_roles_submit", _params, socket) do
+    {:noreply,
+     socket
+     |> assign(player_roles: %{})
+     |> put_flash(:error, "Please select a role for each player.")}
   end
 
   def handle_event(
@@ -85,6 +117,19 @@ defmodule OverstatsWeb.GamesLive do
     |> Enum.map(fn s -> String.split(s, "__") end)
     |> Enum.reduce(%{}, fn [hero | player_name], acc ->
       Map.update(acc, player_name |> Enum.join(), [hero], fn existing -> [hero | existing] end)
+    end)
+  end
+
+  defp roles_violate_count?(roles) do
+    roles
+    |> Map.values()
+    |> Enum.frequencies()
+    |> Enum.all?(fn {role, count} ->
+      case role do
+        "Tank" -> count <= 1
+        "Damage" -> count <= 2
+        "Support" -> count <= 2
+      end
     end)
   end
 

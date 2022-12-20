@@ -63,7 +63,7 @@ defmodule OverstatsWeb.GamesLive.Forms do
       :let={f}
       for={:player_roles}
       phx-submit="player_roles_submit"
-      class="flex flex-col items-start mt-4 gap-y-4"
+      class="flex flex-col items-start mt-4 gap-y-2"
     >
       <%= if Enum.count(@player_names) > 0 do %>
         <div>
@@ -165,7 +165,7 @@ defmodule OverstatsWeb.GamesLive.Forms do
         </div>
       <% end %>
 
-      <.button class="submit mt-4" label="Continue" />
+      <.button class="submit mt-2" label="Continue" />
     </.form>
     """
   end
