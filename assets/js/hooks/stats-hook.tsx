@@ -17,7 +17,6 @@ const StatsHook = {
 
     const element = document.getElementById("stats-hook");
     const root = createRoot(element);
-    root.render(<StatsPage data={statsData} />);
 
     this.handleEvent("stats_data_updated", ({ data }) => {
       statsData = data;

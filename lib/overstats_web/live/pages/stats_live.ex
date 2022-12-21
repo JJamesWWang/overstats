@@ -8,7 +8,7 @@ defmodule OverstatsWeb.StatsLive do
     {:ok,
      socket
      |> assign(all_players: Players.list_players())
-     |> assign(player: [])}
+     |> push_event("stats_data_updated", %{data: %{name: "Default"}})}
   end
 
   @impl true
