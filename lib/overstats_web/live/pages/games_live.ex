@@ -142,7 +142,8 @@ defmodule OverstatsWeb.GamesLive do
            false
          ) do
       {:ok} ->
-        {:noreply, socket |> put_flash(:success, "Game created.")}
+        {:noreply,
+         socket |> put_flash(:success, "Game created.") |> push_redirect(to: ~p"/games")}
 
       {:error, changeset} ->
         IO.inspect(changeset)
@@ -174,7 +175,8 @@ defmodule OverstatsWeb.GamesLive do
            potg_hero
          ) do
       {:ok} ->
-        {:noreply, socket |> put_flash(:success, "Game created.")}
+        {:noreply,
+         socket |> put_flash(:success, "Game created.") |> push_redirect(to: ~p"/games")}
 
       {:error, changeset} ->
         IO.inspect(changeset)
@@ -268,7 +270,7 @@ defmodule OverstatsWeb.GamesLive do
       <.h3 class="mt-8 !mb-6">Game History</.h3>
       <%= if @all_games != %{} do %>
         <div class="grid gap-5 mt-5 md:grid-cols-2 lg:grid-cols-3">
-          <%= for game <- Map.values(@all_games) do %>
+          <%= for game <- Map.values(@all_games) |> Enum.sort(&(&1.game_id >= &2.game_id)) do %>
             <.game_card {game} />
           <% end %>
         </div>
