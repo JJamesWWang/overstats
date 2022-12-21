@@ -2,8 +2,8 @@ import Config
 
 # Configure your database
 config :overstats, Overstats.Repo,
-  username: "root",
-  password: "root",
+  username: "postgres",
+  password: "postgres",
   hostname: "localhost",
   database: "overstats_dev",
   stacktrace: true,
