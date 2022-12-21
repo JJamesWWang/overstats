@@ -48,6 +48,12 @@ const StatsPage = (props: StatsPageProps) => {
 
       <H4>Role selection bias:</H4>
       <RoleSelectionBiasChart data={props.role_selection_bias} />
+
+      <H4>Most played heroes:</H4>
+      <MostPlayedHeroesChart data={props.most_played_heroes} />
+
+      <H4>Most played maps:</H4>
+      <MostPlayedMapsChart data={props.most_played_maps} />
     </>
   );
 };
@@ -227,12 +233,68 @@ const RoleSelectionBiasChart = (props: { data: RoleSelectionBiasData[] }) => {
   );
 };
 
-type MostPlayedHeroesData = {};
+type MostPlayedHeroesData = {
+  hero: string;
+  count: number;
+};
 
-const MostPlayedHeroesChart = (props: { data: MostPlayedHeroesData[] }) => {};
+const MostPlayedHeroesChart = (props: { data: MostPlayedHeroesData[] }) => {
+  return (
+    <div style={{ height: "512px" }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          width={500}
+          height={300}
+          data={props.data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="hero" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="count" fill="#fb923c" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
 
-type MostPlayedMapsData = {};
+type MostPlayedMapsData = {
+  map: string;
+  count: number;
+};
 
-const MostPlayedMapsChart = (props: { data: MostPlayedMapsData[] }) => {};
+const MostPlayedMapsChart = (props: { data: MostPlayedMapsData[] }) => {
+  return (
+    <div style={{ height: "512px" }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          width={500}
+          height={300}
+          data={props.data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="map" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="count" fill="#fb923c" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
 
 export default StatsHook;

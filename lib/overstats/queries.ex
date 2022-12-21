@@ -132,7 +132,9 @@ defmodule Overstats.Queries do
       win_rate_by_map: get_win_rate_by_map(),
       win_rate_by_map_type: get_win_rate_by_map_type(),
       win_rate_by_role: get_win_rate_by_role(),
-      role_selection_bias: get_role_selection_bias()
+      role_selection_bias: get_role_selection_bias(),
+      most_played_heroes: get_most_played_heroes(),
+      most_played_maps: get_most_played_maps()
     }
   end
 
@@ -152,7 +154,9 @@ defmodule Overstats.Queries do
       win_rate_by_map: get_win_rate_by_map(player),
       win_rate_by_map_type: get_win_rate_by_map_type(player),
       win_rate_by_role: get_win_rate_by_role(player),
-      role_selection_bias: get_role_selection_bias(player)
+      role_selection_bias: get_role_selection_bias(player),
+      most_played_heroes: get_most_played_heroes(player),
+      most_played_maps: get_most_played_maps(player)
     }
   end
 
@@ -536,5 +540,56 @@ defmodule Overstats.Queries do
         fullMark: total
       }
     end)
+  end
+
+  defp get_most_played_heroes() do
+    Repo.all(
+      from ph in PlayedHero,
+        join: p in Player,
+        on: ph.player_id == p.id,
+        where: p.name != "Random",
+        join: h in Hero,
+        on: h.id == ph.hero_id,
+        group_by: h.name,
+        select: %{hero: h.name, count: count(h.name)}
+    )
+    |> Enum.sort(&(&1.count > &2.count))
+  end
+
+  defp get_most_played_heroes(player) do
+    Repo.all(
+      from ph in PlayedHero,
+        where: ph.player_id == ^player.id,
+        join: h in Hero,
+        on: h.id == ph.hero_id,
+        group_by: h.name,
+        select: %{hero: h.name, count: count(h.name)}
+    )
+    |> Enum.sort(&(&1.count > &2.count))
+  end
+
+  defp get_most_played_maps() do
+    Repo.all(
+      from g in Game,
+        join: m in Overwatch.Map,
+        on: m.id == g.map_id,
+        group_by: m.name,
+        select: %{map: m.name, count: count(m.name)}
+    )
+    |> Enum.sort(&(&1.count > &2.count))
+  end
+
+  defp get_most_played_maps(player) do
+    Repo.all(
+      from pg in PlayedGame,
+        where: pg.player_id == ^player.id,
+        join: g in Game,
+        on: g.id == pg.game_id,
+        join: m in Overwatch.Map,
+        on: m.id == g.map_id,
+        group_by: m.name,
+        select: %{map: m.name, count: count(m.name)}
+    )
+    |> Enum.sort(&(&1.count > &2.count))
   end
 end
