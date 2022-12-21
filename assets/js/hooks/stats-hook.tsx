@@ -24,8 +24,6 @@ const StatsHook = {
 };
 
 const StatsPage = (props: StatsPageProps) => {
-  console.log(props.win_rate_by_hero);
-  console.log(props.win_rate_by_map);
   return (
     <>
       <H4>Overall Winrate: {toPercent(props.win_rate)}</H4>
@@ -35,6 +33,9 @@ const StatsPage = (props: StatsPageProps) => {
 
       <H4>Win rate by map:</H4>
       <WinRateByMapChart data={props.win_rate_by_map} />
+
+      <H4>Win rate by map type:</H4>
+      <WinRateByMapTypeChart data={props.win_rate_by_map_type} />
     </>
   );
 };
