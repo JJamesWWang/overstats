@@ -230,7 +230,11 @@ defmodule OverstatsWeb.GamesLive do
       />
 
       <%= if @roles? and @player_names != [] do %>
-        <.player_roles_form all_roles={@all_roles} player_names={@player_names} />
+        <.player_roles_form
+          all_roles={@all_roles}
+          player_names={@player_names}
+          player_roles={@player_roles}
+        />
       <% end %>
 
       <%= if @player_names != [] and (not @roles? or @player_roles != %{}) do %>
@@ -239,6 +243,7 @@ defmodule OverstatsWeb.GamesLive do
           roles?={@roles?}
           player_names={@player_names}
           player_roles={@player_roles}
+          player_heroes={@player_heroes}
         />
       <% end %>
 

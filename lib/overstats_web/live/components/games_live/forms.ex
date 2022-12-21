@@ -130,7 +130,11 @@ defmodule OverstatsWeb.GamesLive.Forms do
           />
         </div>
       <% end %>
-      <.button class="submit" label="Continue" />
+      <%= if @player_roles == %{} do %>
+        <.button class="submit" label="Continue" />
+      <% else %>
+        <.button class="submit" label="Reset Roles with currently filled" />
+      <% end %>
     </.form>
     """
   end
@@ -165,7 +169,11 @@ defmodule OverstatsWeb.GamesLive.Forms do
         </div>
       <% end %>
 
-      <.button class="submit mt-2" label="Continue" />
+      <%= if @player_heroes == %{} do %>
+        <.button class="submit mt-2" label="Continue" />
+      <% else %>
+        <.button class="submit mt-2" label="Reset Heroes with currently filled" />
+      <% end %>
     </.form>
     """
   end
@@ -199,7 +207,7 @@ defmodule OverstatsWeb.GamesLive.Forms do
 
       <div class="flex gap-x-4 mt-4">
         <.button class="" label="Skip" phx-click="potg_skip" color="gray" />
-        <.button class="submit" label="Continue" />
+        <.button class="submit" label="Create Game" />
       </div>
     </.form>
     """
