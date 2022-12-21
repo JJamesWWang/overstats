@@ -188,6 +188,17 @@ defmodule OverstatsWeb.GamesLive do
     {:noreply, socket |> push_patch(to: ~p"/games")}
   end
 
+  def handle_event("delete_game", %{"game-id" => game_id}, socket) do
+    case Games.delete_game(Games.get_game!(game_id)) do
+      {:ok} ->
+        {:noreply, push_redirect(socket, to: ~p"/games")}
+
+      {:error, changeset} ->
+        IO.inspect(changeset)
+        {:noreply, put_flash(socket, :error, "There was an error deleting your game.")}
+    end
+  end
+
   defp map_player_to_roles(player_names, roles_map) do
     player_names
     |> Enum.with_index()
@@ -327,6 +338,16 @@ defmodule OverstatsWeb.GamesLive do
       <% else %>
         <.p>No player of the game selected.</.p>
       <% end %>
+
+      <.button
+        phx-click="delete_game"
+        phx-value-game_id={@game_id}
+        class="mt-2"
+        label="Delete"
+        color="danger"
+      >
+        <Heroicons.trash solid class="w-4 h-4 mr-2" />Delete
+      </.button>
     </.modal>
     """
   end
