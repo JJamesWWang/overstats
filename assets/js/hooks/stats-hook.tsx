@@ -24,55 +24,181 @@ const StatsHook = {
 };
 
 const StatsPage = (props: StatsPageProps) => {
+  console.log(props.win_rate_by_hero);
+  console.log(props.win_rate_by_map);
   return (
     <>
-      <P>Winrate: {props.win_rate}</P>
-      <div style={{ height: "512px" }}>
-        <WinRateByHeroChart data={props.win_rate_by_hero} />
-      </div>
+      <H4>Overall Winrate: {toPercent(props.win_rate)}</H4>
+
+      <H4>Win rate by hero:</H4>
+      <WinRateByHeroChart data={props.win_rate_by_hero} />
+
+      <H4>Win rate by map:</H4>
+      <WinRateByMapChart data={props.win_rate_by_map} />
     </>
   );
 };
 
+const toPercent = (decimal) => (decimal * 100).toFixed(2) + "%";
+
 type StatsPageProps = {
   win_rate: number;
   win_rate_by_hero: WinRateByHeroData[];
+  win_rate_by_map: WinRateByMapData[];
+  win_rate_by_map_type: WinRateByMapTypeData[];
+  win_rate_by_role: WinRateByRoleData[];
+  role_queue_selection_bias: RoleQueueSelectionBiasData[];
+  most_played_heroes: MostPlayedHeroesData[];
+  most_played_maps: MostPlayedMapsData[];
 };
 
-const P = (props) => {
+const H4 = (props) => {
   return (
-    <p className="leading-5 text-gray-600 dark:text-gray-400 mb-2">{props.children}</p>
+    <p className="text-l sm:text-xl font-bold leading-7 mt-4 text-gray-900 dark:text-white mb-5">
+      {props.children}
+    </p>
   );
 };
 
 type WinRateByHeroData = {
-  hero_name: string;
+  hero: string;
   win_rate: number;
 };
 
 const WinRateByHeroChart = (props: { data: WinRateByHeroData[] }) => {
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <BarChart
-        width={500}
-        height={300}
-        data={props.data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="hero_name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="win_rate" fill="#fb923c" />
-      </BarChart>
-    </ResponsiveContainer>
+    <div style={{ height: "512px" }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          width={500}
+          height={300}
+          data={props.data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="hero" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="win_rate" fill="#fb923c" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
+
+type WinRateByMapData = {
+  map: string;
+  win_rate: number;
+};
+
+const WinRateByMapChart = (props: { data: WinRateByMapData[] }) => {
+  return (
+    <div style={{ height: "512px" }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          width={500}
+          height={300}
+          data={props.data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="map" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="win_rate" fill="#fb923c" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+type WinRateByMapTypeData = {
+  map_type: string;
+  win_rate: number;
+};
+
+const WinRateByMapTypeChart = (props: { data: WinRateByMapTypeData[] }) => {
+  return (
+    <div style={{ height: "512px" }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          width={500}
+          height={300}
+          data={props.data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="map_type" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="win_rate" fill="#fb923c" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+type WinRateByRoleData = {
+  role: string;
+};
+
+const WinRateByRoleChart = (props: { data: WinRateByRoleData[] }) => {
+  return (
+    <div style={{ height: "512px" }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          width={500}
+          height={300}
+          data={props.data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="role" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="win_rate" fill="#fb923c" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+type RoleQueueSelectionBiasData = {};
+
+const RoleQueueSelectionBiasChart = (props: {
+  data: RoleQueueSelectionBiasData[];
+}) => {};
+
+type MostPlayedHeroesData = {};
+
+const MostPlayedHeroesChart = (props: { data: MostPlayedHeroesData[] }) => {};
+
+type MostPlayedMapsData = {};
+
+const MostPlayedMapsChart = (props: { data: MostPlayedMapsData[] }) => {};
 
 export default StatsHook;

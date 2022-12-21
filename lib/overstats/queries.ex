@@ -3,6 +3,7 @@ defmodule Overstats.Queries do
   alias Overstats.Repo
   alias Overstats.Games.Game
   alias Overstats.Players.Player
+  alias Overstats.Overwatch
   alias Overstats.Overwatch.{Hero}
   alias Overstats.Stats.{PlayedGame, PlayedHero, PlayOfTheGame}
 
@@ -127,7 +128,8 @@ defmodule Overstats.Queries do
   def get_all_stats() do
     %{
       win_rate: get_win_rate(),
-      win_rate_by_hero: get_win_rate_by_hero()
+      win_rate_by_hero: get_win_rate_by_hero(),
+      win_rate_by_map: get_win_rate_by_map()
     }
   end
 
@@ -143,7 +145,8 @@ defmodule Overstats.Queries do
   def get_player_stats(player) do
     %{
       win_rate: get_win_rate(player),
-      win_rate_by_hero: get_win_rate_by_hero(player)
+      win_rate_by_hero: get_win_rate_by_hero(player),
+      win_rate_by_map: get_win_rate_by_map(player)
     }
   end
 
@@ -228,15 +231,15 @@ defmodule Overstats.Queries do
 
     Repo.all(
       from w in subquery(win_by_hero),
-        join: t in subquery(total_by_hero),
+        right_join: t in subquery(total_by_hero),
         on: w.hero_id == t.hero_id,
         join: h in Hero,
-        on: h.id == w.hero_id,
-        select: {h.name, w.count, t.count}
+        on: h.id == t.hero_id,
+        select: {h.name, w.count |> coalesce(0), t.count}
     )
     |> Enum.sort(fn {_, w1, t1}, {_, w2, t2} -> w1 / t1 > w2 / t2 end)
     |> Enum.map(fn {hero, win_count, total_count} ->
-      %{hero_name: hero, win_rate: win_count / total_count}
+      %{hero: hero, win_rate: win_count / total_count}
     end)
   end
 
@@ -260,15 +263,103 @@ defmodule Overstats.Queries do
 
     Repo.all(
       from w in subquery(win_by_hero),
-        join: t in subquery(total_by_hero),
+        right_join: t in subquery(total_by_hero),
         on: w.hero_id == t.hero_id,
         join: h in Hero,
-        on: h.id == w.hero_id,
-        select: {h.name, w.count, t.count}
+        on: h.id == t.hero_id,
+        select: {h.name, w.count |> coalesce(0), t.count}
     )
     |> Enum.sort(fn {_, w1, t1}, {_, w2, t2} -> w1 / t1 > w2 / t2 end)
     |> Enum.map(fn {hero, win_count, total_count} ->
-      %{hero_name: hero, win_rate: win_count / total_count}
+      %{hero: hero, win_rate: win_count / total_count}
     end)
+  end
+
+  defp get_win_rate_by_map() do
+    win_by_map =
+      from pg in PlayedGame,
+        where: pg.won?,
+        join: p in Player,
+        on: pg.player_id == p.id,
+        where: p.name != "Random",
+        join: g in Game,
+        on: g.id == pg.game_id,
+        join: m in Overwatch.Map,
+        on: m.id == g.map_id,
+        group_by: m.id,
+        select: %{map_id: m.id, count: count(m.id)}
+
+    total_by_map =
+      from pg in PlayedGame,
+        join: p in Player,
+        on: pg.player_id == p.id,
+        where: p.name != "Random",
+        join: g in Game,
+        on: g.id == pg.game_id,
+        join: m in Overwatch.Map,
+        on: m.id == g.map_id,
+        group_by: m.id,
+        select: %{map_id: m.id, count: count(m.id)}
+
+    Repo.all(
+      from w in subquery(win_by_map),
+        right_join: t in subquery(total_by_map),
+        on: w.map_id == t.map_id,
+        join: m in Overwatch.Map,
+        on: m.id == t.map_id,
+        select: {m.name, w.count |> coalesce(0), t.count}
+    )
+    |> Enum.sort(fn {_, w1, t1}, {_, w2, t2} -> w1 / t1 > w2 / t2 end)
+    |> Enum.map(fn {map, win_count, total_count} ->
+      %{map: map, win_rate: win_count / total_count}
+    end)
+  end
+
+  defp get_win_rate_by_map(player) do
+    win_by_map =
+      from pg in PlayedGame,
+        where: pg.won?,
+        where: pg.player_id == ^player.id,
+        join: g in Game,
+        on: g.id == pg.game_id,
+        join: m in Overwatch.Map,
+        on: m.id == g.map_id,
+        group_by: m.id,
+        select: %{map_id: m.id, count: count(m.id)}
+
+    total_by_map =
+      from pg in PlayedGame,
+        where: pg.player_id == ^player.id,
+        join: g in Game,
+        on: g.id == pg.game_id,
+        join: m in Overwatch.Map,
+        on: m.id == g.map_id,
+        group_by: m.id,
+        select: %{map_id: m.id, count: count(m.id)}
+
+    Repo.all(
+      from w in subquery(win_by_map),
+        right_join: t in subquery(total_by_map),
+        on: w.map_id == t.map_id,
+        join: m in Overwatch.Map,
+        on: m.id == t.map_id,
+        select: {m.name, w.count |> coalesce(0), t.count}
+    )
+    |> Enum.sort(fn {_, w1, t1}, {_, w2, t2} -> w1 / t1 > w2 / t2 end)
+    |> Enum.map(fn {map, win_count, total_count} ->
+      %{map: map, win_rate: win_count / total_count}
+    end)
+  end
+
+  defp get_win_rate_by_map_type() do
+  end
+
+  defp get_win_rate_by_map_type(player) do
+  end
+
+  defp get_win_rate_by_role() do
+  end
+
+  defp get_win_rate_by_role(player) do
   end
 end
