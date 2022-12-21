@@ -6,6 +6,34 @@ defmodule Overstats.Queries do
   alias Overstats.Overwatch.{Hero}
   alias Overstats.Stats.{PlayedGame, PlayedHero, PlayOfTheGame}
 
+  @doc """
+  Returns all games in a serialized format as a map in which the key is the game id and
+  the value is the serialized data.
+
+  ## Examples
+
+      iex> list_games_with_stats()
+      %{
+        1 => %{
+                game_id: 1,
+                game_mode: "Competitive",
+                role_queue?: true,
+                won?: true,
+                map: %{name: "Dorado", img_url: "https://url.com"}
+                players: ["Player1", "Player2", "Player3", "Player4", "Player5"],
+                player_heroes: %{
+                  "Player1" => ["Hero1", "Hero2"],
+                  "Player2" => ["Hero3", "Hero4"],
+                  "Player3" => ["Hero5", "Hero6"],
+                  "Player4" => ["Hero7", "Hero8"],
+                  "Player5" => ["Hero9", "Hero10"]
+                },
+                potg_player: "Player1",
+                potg_hero: "Hero1"
+              },
+        2 => %{..., potg_player: nil, potg_hero: nil}
+      }
+  """
   def list_games_with_stats() do
     # Get all games with their maps, what players played them, and what heroes they played
     Repo.all(Game)
@@ -86,4 +114,29 @@ defmodule Overstats.Queries do
         {nil, nil}
     end
   end
+
+  @doc """
+  Returns all of the stats data aggregated for all players, serialized in the format
+  that the StatsHook expects.
+
+  ## Examples
+
+      iex> get_all_stats()
+
+  """
+  def get_all_stats() do
+  end
+
+  @doc """
+  Returns all of the stats data for a player, serialized in the format that the
+  StatsHook expects.
+
+  ## Examples
+
+      iex> get_all_stats()
+
+  """
+  def get_player_stats(player) do
+  end
+
 end
