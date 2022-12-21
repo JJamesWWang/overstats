@@ -56,7 +56,7 @@ defmodule Overstats.Queries do
          game_id: game.id,
          game_mode: game.mode,
          role_queue?: game.role_queue?,
-         won?: get_team_won?(players),
+         won?: get_team_won?(game.id, players),
          map: %{name: game.map.name, img_url: game.map.img_url},
          players: players |> Enum.map(fn player -> player.name end),
          player_heroes: player_heroes,
@@ -76,12 +76,12 @@ defmodule Overstats.Queries do
     )
   end
 
-  defp get_team_won?(players) do
+  defp get_team_won?(game_id, players) do
     players = players |> Enum.reject(&(&1.name == "Random")) |> Enum.map(& &1.id)
 
     Repo.all(
       from pg in PlayedGame,
-        where: pg.player_id in ^players,
+        where: pg.player_id in ^players and pg.game_id == ^game_id,
         select: pg.won?
     )
     |> Enum.any?()
@@ -125,6 +125,10 @@ defmodule Overstats.Queries do
 
   """
   def get_all_stats() do
+    %{
+      win_rate: get_win_rate(),
+      win_rate_by_hero: get_win_rate_by_hero()
+    }
   end
 
   @doc """
@@ -137,6 +141,134 @@ defmodule Overstats.Queries do
 
   """
   def get_player_stats(player) do
+    %{
+      win_rate: get_win_rate(player),
+      win_rate_by_hero: get_win_rate_by_hero(player)
+    }
   end
 
+  defp get_win_rate() do
+    win_count =
+      Repo.all(
+        from pg in PlayedGame,
+          join: p in Player,
+          on: pg.player_id == p.id,
+          where: p.name != "Random",
+          where: pg.won?,
+          group_by: pg.game_id,
+          select: count(pg.game_id)
+      )
+      |> Enum.count()
+
+    total_count =
+      Repo.all(
+        from pg in PlayedGame,
+          join: p in Player,
+          on: pg.player_id == p.id,
+          where: p.name != "Random",
+          group_by: pg.game_id,
+          select: count(pg.game_id)
+      )
+      |> Enum.count()
+
+    if total_count == 0 do
+      0
+    else
+      win_count / total_count
+    end
+  end
+
+  defp get_win_rate(player) do
+    win_count =
+      Repo.all(
+        from pg in PlayedGame,
+          where: pg.player_id == ^player.id and pg.won?,
+          group_by: pg.game_id,
+          select: count(pg.game_id)
+      )
+      |> Enum.count()
+
+    total_count =
+      Repo.all(
+        from pg in PlayedGame,
+          where: pg.player_id == ^player.id,
+          group_by: pg.game_id,
+          select: count(pg.game_id)
+      )
+      |> Enum.count()
+
+    if total_count == 0 do
+      0
+    else
+      win_count / total_count
+    end
+  end
+
+  defp get_win_rate_by_hero() do
+    win_by_hero =
+      from pg in PlayedGame,
+        where: pg.won?,
+        join: p in Player,
+        on: pg.player_id == p.id,
+        where: p.name != "Random",
+        join: ph in PlayedHero,
+        on: ph.game_id == pg.game_id and ph.player_id == pg.player_id,
+        group_by: ph.hero_id,
+        select: %{hero_id: ph.hero_id, count: count(ph.hero_id)}
+
+    total_by_hero =
+      from pg in PlayedGame,
+        join: p in Player,
+        on: pg.player_id == p.id,
+        where: p.name != "Random",
+        join: ph in PlayedHero,
+        on: ph.game_id == pg.game_id and ph.player_id == pg.player_id,
+        group_by: ph.hero_id,
+        select: %{hero_id: ph.hero_id, count: count(ph.hero_id)}
+
+    Repo.all(
+      from w in subquery(win_by_hero),
+        join: t in subquery(total_by_hero),
+        on: w.hero_id == t.hero_id,
+        join: h in Hero,
+        on: h.id == w.hero_id,
+        select: {h.name, w.count, t.count}
+    )
+    |> Enum.sort(fn {_, w1, t1}, {_, w2, t2} -> w1 / t1 > w2 / t2 end)
+    |> Enum.map(fn {hero, win_count, total_count} ->
+      %{hero_name: hero, win_rate: win_count / total_count}
+    end)
+  end
+
+  defp get_win_rate_by_hero(player) do
+    win_by_hero =
+      from pg in PlayedGame,
+        where: pg.won?,
+        where: pg.player_id == ^player.id,
+        join: ph in PlayedHero,
+        on: ph.game_id == pg.game_id and ph.player_id == pg.player_id,
+        group_by: ph.hero_id,
+        select: %{hero_id: ph.hero_id, count: count(ph.hero_id)}
+
+    total_by_hero =
+      from pg in PlayedGame,
+        where: pg.player_id == ^player.id,
+        join: ph in PlayedHero,
+        on: ph.game_id == pg.game_id and ph.player_id == pg.player_id,
+        group_by: ph.hero_id,
+        select: %{hero_id: ph.hero_id, count: count(ph.hero_id)}
+
+    Repo.all(
+      from w in subquery(win_by_hero),
+        join: t in subquery(total_by_hero),
+        on: w.hero_id == t.hero_id,
+        join: h in Hero,
+        on: h.id == w.hero_id,
+        select: {h.name, w.count, t.count}
+    )
+    |> Enum.sort(fn {_, w1, t1}, {_, w2, t2} -> w1 / t1 > w2 / t2 end)
+    |> Enum.map(fn {hero, win_count, total_count} ->
+      %{hero_name: hero, win_rate: win_count / total_count}
+    end)
+  end
 end

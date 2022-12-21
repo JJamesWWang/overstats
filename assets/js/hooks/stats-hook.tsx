@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
 import {
   BarChart,
@@ -14,15 +14,11 @@ import {
 
 const StatsHook = {
   mounted() {
-    let statsData;
-
     const element = document.getElementById("stats-hook");
-    const root = createRoot(element);
+    let root = createRoot(element);
 
     this.handleEvent("stats_data_updated", ({ data }) => {
-      statsData = data;
-      console.log(statsData);
-      root.render(<StatsPage data={statsData.name} />);
+      root.render(<StatsPage {...data} />);
     });
   },
 };
@@ -31,7 +27,9 @@ const StatsPage = (props: StatsPageProps) => {
   return (
     <>
       <P>Winrate: {props.win_rate}</P>
-      <WinRateByHeroChart data={props.win_rate_by_hero} />
+      <div style={{ height: "512px" }}>
+        <WinRateByHeroChart data={props.win_rate_by_hero} />
+      </div>
     </>
   );
 };
@@ -49,8 +47,7 @@ const P = (props) => {
 
 type WinRateByHeroData = {
   hero_name: string;
-  competitive_win_rate: number;
-  quick_play_win_rate: number;
+  win_rate: number;
 };
 
 const WinRateByHeroChart = (props: { data: WinRateByHeroData[] }) => {
@@ -72,10 +69,10 @@ const WinRateByHeroChart = (props: { data: WinRateByHeroData[] }) => {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="competitive_win_rate" fill="#fb923c" />
-        <Bar dataKey="quick_play_win_rate" fill="#818cf8" />
+        <Bar dataKey="win_rate" fill="#fb923c" />
       </BarChart>
     </ResponsiveContainer>
   );
 };
+
 export default StatsHook;

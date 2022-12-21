@@ -14,17 +14,26 @@ defmodule OverstatsWeb.StatsLive do
   end
 
   @impl true
-  def handle_event(
-        "stats_data_submit",
-        %{"stats_data" => %{"player_name" => player_name}},
-        socket
-      ) do
+  def handle_params(%{"player" => player_name}, _uri, socket) do
     player = Players.get_player_by_name!(player_name)
 
     {:noreply,
      socket
      |> assign(player_name: player_name)
      |> push_event("stats_data_updated", %{data: Queries.get_player_stats(player)})}
+  end
+
+  def handle_params(_params, _uri, socket) do
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event(
+        "stats_data_submit",
+        %{"stats_data" => %{"player_name" => player_name}},
+        socket
+      ) do
+    {:noreply, socket |> push_redirect(to: ~p"/stats?player=#{player_name}")}
   end
 
   @impl true
