@@ -5,6 +5,7 @@ defmodule Overstats.Repo.Migrations.CreateMaps do
     create table(:maps) do
       add :name, :string, null: false
       add :type, :string, null: false
+      add :img_url, :string, null: false
     end
 
     create unique_index(:maps, [:name])

@@ -21,7 +21,24 @@ defmodule OverstatsWeb.GamesLive do
      |> assign(player_roles: %{})
      # map from player name to list of heroes played
      |> assign(player_heroes: %{})
-     |> assign(potg_player: nil)}
+     |> assign(potg_player: nil)
+     |> assign(view_game: nil)}
+  end
+
+  @impl true
+  def handle_params(%{"game_id" => game_id}, _uri, %{assigns: %{all_games: games}} = socket) do
+    case Integer.parse(game_id) do
+      {id, ""} ->
+        {:noreply, assign(socket, view_game: Map.get(games, id))}
+
+      _ ->
+        {:noreply, assign(socket, view_game: nil)}
+    end
+  end
+
+  @impl true
+  def handle_params(_params, _uri, socket) do
+    {:noreply, assign(socket, view_game: nil)}
   end
 
   @impl true
@@ -165,6 +182,10 @@ defmodule OverstatsWeb.GamesLive do
     end
   end
 
+  def handle_event("close_modal", _params, socket) do
+    {:noreply, socket |> push_patch(to: ~p"/games")}
+  end
+
   defp map_player_to_roles(player_names, roles_map) do
     player_names
     |> Enum.with_index()
@@ -196,7 +217,7 @@ defmodule OverstatsWeb.GamesLive do
   def render(assigns) do
     ~H"""
     <Header.render page="games" />
-    <.container max_width="lg">
+    <.container max_width="lg" class="mb-6">
       <.h2>Games</.h2>
 
       <.h3>Add New Game</.h3>
@@ -241,7 +262,7 @@ defmodule OverstatsWeb.GamesLive do
 
       <.h3 class="mt-8 !mb-6">Game History</.h3>
       <%= if @all_games != %{} do %>
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid gap-5 mt-5 md:grid-cols-2 lg:grid-cols-3">
           <%= for game <- Map.values(@all_games) do %>
             <.game_card {game} />
           <% end %>
@@ -250,16 +271,56 @@ defmodule OverstatsWeb.GamesLive do
         <.p>No games found.</.p>
       <% end %>
     </.container>
+
+    <%= if @view_game != nil do %>
+      <.game_view_modal {@view_game} />
+    <% end %>
     """
   end
 
   defp game_card(assigns) do
     ~H"""
     <.card>
-      <.card_content>
-        <%= @game_mode %>
+      <.card_media src={@map.img_url} alt={@map.name} />
+
+      <.card_content
+        class="!p-0 !px-6 !pt-4 !pb-2"
+        category={"#{@game_mode}: #{if(@role_queue?, do: "Role Queue", else: "Open Queue")}"}
+        heading={"#{if(@won?, do: "Win", else: "Loss")} on #{@map.name}"}
+      >
       </.card_content>
+
+      <.card_footer>
+        <.button link_type="live_patch" to={~p"/games?game_id=#{@game_id}"} label="View">
+          <Heroicons.eye solid class="w-4 h-4 mr-2" />View
+        </.button>
+      </.card_footer>
     </.card>
+    """
+  end
+
+  defp game_view_modal(assigns) do
+    ~H"""
+    <.modal title={"#{if(@won?, do: "Win", else: "Loss")} on #{@map.name}"}>
+      <.h4>Game Mode</.h4>
+      <.p>
+        <%= "#{@game_mode}: #{if(@role_queue?, do: "Role Queue", else: "Open Queue")}" %>
+      </.p>
+      <.h4 class="mt-3">Players</.h4>
+      <%= for {player, heroes} <- @player_heroes do %>
+        <.p>
+          <span class="font-bold"><%= "#{player}: " %></span> <%= "#{Enum.join(heroes, ", ")}" %>
+        </.p>
+      <% end %>
+      <.h4 class="mt-3">Player of the Game</.h4>
+      <%= if @potg_player != nil do %>
+        <.p>
+          <%= "#{@potg_player} as #{@potg_hero}" %>
+        </.p>
+      <% else %>
+        <.p>No player of the game selected.</.p>
+      <% end %>
+    </.modal>
     """
   end
 end

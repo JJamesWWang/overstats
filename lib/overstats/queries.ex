@@ -28,7 +28,8 @@ defmodule Overstats.Queries do
          game_id: game.id,
          game_mode: game.mode,
          role_queue?: game.role_queue?,
-         map: game.map.name,
+         won?: get_team_won?(players),
+         map: %{name: game.map.name, img_url: game.map.img_url},
          players: players |> Enum.map(fn player -> player.name end),
          player_heroes: player_heroes,
          potg_player: potg_player,
@@ -45,6 +46,17 @@ defmodule Overstats.Queries do
         where: pg.game_id == ^game_id,
         select: p
     )
+  end
+
+  defp get_team_won?(players) do
+    players = players |> Enum.reject(&(&1.name == "Random")) |> Enum.map(& &1.id)
+
+    Repo.all(
+      from pg in PlayedGame,
+        where: pg.player_id in ^players,
+        select: pg.won?
+    )
+    |> Enum.any?()
   end
 
   defp get_heroes_of_player(game_id, player_id) do
