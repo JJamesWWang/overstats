@@ -10,6 +10,11 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
 } from "recharts";
 
 const StatsHook = {
@@ -24,6 +29,7 @@ const StatsHook = {
 };
 
 const StatsPage = (props: StatsPageProps) => {
+  console.log(props);
   return (
     <>
       <H4>Overall Winrate: {toPercent(props.win_rate)}</H4>
@@ -39,6 +45,9 @@ const StatsPage = (props: StatsPageProps) => {
 
       <H4>Win rate by role:</H4>
       <WinRateByRoleChart data={props.win_rate_by_role} />
+
+      <H4>Role selection bias:</H4>
+      <RoleSelectionBiasChart data={props.role_selection_bias} />
     </>
   );
 };
@@ -51,7 +60,7 @@ type StatsPageProps = {
   win_rate_by_map: WinRateByMapData[];
   win_rate_by_map_type: WinRateByMapTypeData[];
   win_rate_by_role: WinRateByRoleData[];
-  role_queue_selection_bias: RoleQueueSelectionBiasData[];
+  role_selection_bias: RoleSelectionBiasData[];
   most_played_heroes: MostPlayedHeroesData[];
   most_played_maps: MostPlayedMapsData[];
 };
@@ -191,11 +200,32 @@ const WinRateByRoleChart = (props: { data: WinRateByRoleData[] }) => {
   );
 };
 
-type RoleQueueSelectionBiasData = {};
+type RoleSelectionBiasData = {
+  role: string;
+  count: number;
+  fullMark: number;
+};
 
-const RoleQueueSelectionBiasChart = (props: {
-  data: RoleQueueSelectionBiasData[];
-}) => {};
+const RoleSelectionBiasChart = (props: { data: RoleSelectionBiasData[] }) => {
+  return (
+    <div style={{ height: "512px" }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={props.data}>
+          <PolarGrid />
+          <PolarAngleAxis dataKey="role" />
+          <PolarRadiusAxis />
+          <Radar
+            name="All"
+            dataKey="count"
+            stroke="#fb923c"
+            fill="#fb923c"
+            fillOpacity={0.6}
+          />
+        </RadarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
 
 type MostPlayedHeroesData = {};
 

@@ -17,7 +17,7 @@ defmodule Overstats.Overwatch do
       [%Hero{}, ...]
 
   """
-  def list_heroes do
+  def list_heroes() do
     Repo.all(Hero)
   end
 
@@ -29,7 +29,7 @@ defmodule Overstats.Overwatch do
       iex> list_roles()
       ["Tank", "Damage", "Support"]
   """
-  def list_roles do
+  def list_roles() do
     Repo.all(Hero)
     |> Enum.map(& &1.role)
     |> Enum.uniq()

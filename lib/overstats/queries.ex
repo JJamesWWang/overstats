@@ -131,7 +131,8 @@ defmodule Overstats.Queries do
       win_rate_by_hero: get_win_rate_by_hero(),
       win_rate_by_map: get_win_rate_by_map(),
       win_rate_by_map_type: get_win_rate_by_map_type(),
-      win_rate_by_role: get_win_rate_by_role()
+      win_rate_by_role: get_win_rate_by_role(),
+      role_selection_bias: get_role_selection_bias()
     }
   end
 
@@ -150,7 +151,8 @@ defmodule Overstats.Queries do
       win_rate_by_hero: get_win_rate_by_hero(player),
       win_rate_by_map: get_win_rate_by_map(player),
       win_rate_by_map_type: get_win_rate_by_map_type(player),
-      win_rate_by_role: get_win_rate_by_role(player)
+      win_rate_by_role: get_win_rate_by_role(player),
+      role_selection_bias: get_role_selection_bias(player)
     }
   end
 
@@ -496,6 +498,43 @@ defmodule Overstats.Queries do
     |> Enum.sort(fn {_, w1, t1}, {_, w2, t2} -> w1 / t1 > w2 / t2 end)
     |> Enum.map(fn {role, win_count, total_count} ->
       %{role: role, win_rate: win_count / total_count}
+    end)
+  end
+
+  defp get_role_selection_bias() do
+    total = Repo.one(from ph in PlayedHero, select: count(ph.id))
+
+    Repo.all(
+      from ph in PlayedHero,
+        join: p in Player,
+        on: ph.player_id == p.id,
+        where: p.name != "Random",
+        right_join: h in Hero,
+        on: h.id == ph.hero_id,
+        group_by: h.role,
+        select: {h.role, count(h.role) |> coalesce(0)}
+    )
+    |> Enum.map(fn {role, count} -> %{role: role, count: count, fullMark: total} end)
+  end
+
+  defp get_role_selection_bias(player) do
+    total = Repo.one(from ph in PlayedHero, select: count(ph.id))
+
+    Overwatch.list_roles()
+    |> Enum.map(fn role ->
+      %{
+        role: role,
+        count:
+          Repo.one(
+            from ph in PlayedHero,
+              where: ph.player_id == ^player.id,
+              right_join: h in Hero,
+              on: h.id == ph.hero_id,
+              where: h.role == ^role,
+              select: count(h.role)
+          ),
+        fullMark: total
+      }
     end)
   end
 end
