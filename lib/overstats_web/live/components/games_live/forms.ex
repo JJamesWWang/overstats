@@ -30,9 +30,9 @@ defmodule OverstatsWeb.GamesLive.Forms do
       </div>
 
       <div>
-        <.form_label form={f} field={:roles?} />
-        <.switch checked={@roles?} form={f} field={:roles?} />
-        <.form_field_error form={f} field={:roles?} />
+        <.form_label form={f} field={:role_queue?} />
+        <.switch checked={@role_queue?} form={f} field={:role_queue?} />
+        <.form_field_error form={f} field={:role_queue?} />
       </div>
 
       <div class="flex">
@@ -157,7 +157,7 @@ defmodule OverstatsWeb.GamesLive.Forms do
             form={f}
             field={:player_heroes}
             options={
-              if(@roles?,
+              if(@role_queue?,
                 do:
                   @all_heroes
                   |> heroes_by_role(Map.get(@player_roles, name))

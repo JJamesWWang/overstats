@@ -15,7 +15,7 @@ defmodule OverstatsWeb.GamesLive do
      |> assign(all_heroes: Overwatch.list_heroes())
      |> assign(all_roles: Overwatch.list_roles())
      # list of player names
-     |> assign(roles?: true)
+     |> assign(role_queue?: true)
      |> assign(player_names: [])
      # map from player name to role
      |> assign(player_roles: %{})
@@ -50,7 +50,7 @@ defmodule OverstatsWeb.GamesLive do
             "map" => map,
             "won?" => won?,
             "player_names" => player_names,
-            "roles?" => roles?
+            "role_queue?" => role_queue?
           }
         },
         socket
@@ -60,7 +60,7 @@ defmodule OverstatsWeb.GamesLive do
      |> assign(game_mode: game_mode)
      |> assign(map: map)
      |> assign(won?: won?)
-     |> assign(roles?: roles? == "true")
+     |> assign(role_queue?: role_queue? == "true")
      |> assign(player_names: if(is_list(player_names), do: player_names, else: []))
      |> assign(player_heroes: %{})}
   end
@@ -128,7 +128,7 @@ defmodule OverstatsWeb.GamesLive do
             game_mode: game_mode,
             map: map,
             won?: won?,
-            roles?: roles?,
+            role_queue?: role_queue?,
             player_heroes: player_heroes
           }
         } = socket
@@ -137,7 +137,7 @@ defmodule OverstatsWeb.GamesLive do
            game_mode,
            map,
            won?,
-           roles?,
+           role_queue?,
            player_heroes,
            false
          ) do
@@ -159,7 +159,7 @@ defmodule OverstatsWeb.GamesLive do
             game_mode: game_mode,
             map: map,
             won?: won?,
-            roles?: roles?,
+            role_queue?: role_queue?,
             player_heroes: player_heroes
           }
         } = socket
@@ -168,7 +168,7 @@ defmodule OverstatsWeb.GamesLive do
            game_mode,
            map,
            won?,
-           roles?,
+           role_queue?,
            player_heroes,
            true,
            potg_player,
@@ -238,11 +238,11 @@ defmodule OverstatsWeb.GamesLive do
         all_game_modes={@all_game_modes}
         all_maps={@all_maps}
         all_players={@all_players}
-        roles?={@roles?}
+        role_queue?={@role_queue?}
         player_names={@player_names}
       />
 
-      <%= if @roles? and @player_names != [] do %>
+      <%= if @role_queue? and @player_names != [] do %>
         <.player_roles_form
           all_roles={@all_roles}
           player_names={@player_names}
@@ -250,10 +250,10 @@ defmodule OverstatsWeb.GamesLive do
         />
       <% end %>
 
-      <%= if @player_names != [] and (not @roles? or @player_roles != %{}) do %>
+      <%= if @player_names != [] and (not @role_queue? or @player_roles != %{}) do %>
         <.player_heroes_form
           all_heroes={@all_heroes}
-          roles?={@roles?}
+          role_queue?={@role_queue?}
           player_names={@player_names}
           player_roles={@player_roles}
           player_heroes={@player_heroes}
