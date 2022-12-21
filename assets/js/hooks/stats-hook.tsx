@@ -36,6 +36,9 @@ const StatsPage = (props: StatsPageProps) => {
 
       <H4>Win rate by map type:</H4>
       <WinRateByMapTypeChart data={props.win_rate_by_map_type} />
+
+      <H4>Win rate by role:</H4>
+      <WinRateByRoleChart data={props.win_rate_by_role} />
     </>
   );
 };
