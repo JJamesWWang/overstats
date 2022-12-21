@@ -18,6 +18,7 @@ defmodule OverstatsWeb.StatsLive do
     <Header.render page="stats" />
     <.container max_width="lg">
       <.h2>Stats</.h2>
+      <div id="stats-hook" phx-hook="StatsHook" data-stats={["hello"]} />
     </.container>
     """
   end
