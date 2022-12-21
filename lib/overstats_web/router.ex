@@ -23,6 +23,7 @@ defmodule OverstatsWeb.Router do
     live "/live/slide_over/:origin", PageLive, :slide_over
     live "/live/pagination/:page", PageLive, :pagination
 
+    live "/", GamesLive
     live "/games", GamesLive
     live "/players/delete/:id", PlayersLive, :delete
     live "/players", PlayersLive, :index

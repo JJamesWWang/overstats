@@ -24,6 +24,7 @@ defmodule OverstatsWeb.PlayersLive do
     end
   end
 
+  @impl true
   def handle_event("submit", %{"player" => %{"name" => name}}, socket) do
     case Players.create_player(%{name: name}) do
       {:ok, _player} ->
