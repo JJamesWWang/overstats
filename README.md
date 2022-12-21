@@ -14,4 +14,4 @@ A clean install of the Phoenix 1.7 (RC) along with:
 ## Notes to self
 
 To run MySQL: `sudo /etc/init.d/mysql start`
-To enter MySQL shell: `sudo mysql`
+To enter MySQL shell: `sudo mysql -p`

@@ -1,14 +1,14 @@
 defmodule OverstatsWeb.GamesLive do
   use OverstatsWeb, :live_view
   alias OverstatsWeb.Header
-  alias Overstats.{Games, Players, Overwatch}
+  alias Overstats.{Games, Players, Overwatch, Queries}
   import OverstatsWeb.GamesLive.Forms
 
   @impl true
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(all_games: Games.list_games())
+     |> assign(all_games: Queries.list_games_with_stats())
      |> assign(all_game_modes: Games.list_game_modes())
      |> assign(all_maps: Overwatch.list_maps())
      |> assign(all_players: Players.list_players())
@@ -239,11 +239,13 @@ defmodule OverstatsWeb.GamesLive do
             options={@all_heroes |> Enum.map(&{&1.name, &1.name})}
           /> --%>
 
-      <.h3 class="mt-4">Game History</.h3>
-      <%= if @all_games != [] do %>
-        <%= for game <- @all_games do %>
-          <.game_history_item game={game} />
-        <% end %>
+      <.h3 class="mt-8 !mb-6">Game History</.h3>
+      <%= if @all_games != %{} do %>
+        <div class="grid grid-cols-3 gap-4">
+          <%= for game <- Map.values(@all_games) do %>
+            <.game_card {game} />
+          <% end %>
+        </div>
       <% else %>
         <.p>No games found.</.p>
       <% end %>
@@ -251,9 +253,13 @@ defmodule OverstatsWeb.GamesLive do
     """
   end
 
-  defp game_history_item(assigns) do
+  defp game_card(assigns) do
     ~H"""
-    <.p><%= @game.mode %> match</.p>
+    <.card>
+      <.card_content>
+        <%= @game_mode %>
+      </.card_content>
+    </.card>
     """
   end
 end

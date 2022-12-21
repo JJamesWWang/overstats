@@ -5,7 +5,7 @@ defmodule Overstats.Games.Game do
   schema "games" do
     field :mode, :string
     field :role_queue?, :boolean
-    belongs_to :map, Overstats.Maps.Map
+    belongs_to :map, Overstats.Overwatch.Map
 
     timestamps()
   end
