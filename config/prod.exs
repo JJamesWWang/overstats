@@ -11,11 +11,11 @@ import Config
 # before starting your production server.
 config :overstats, OverstatsWeb.Endpoint, cache_static_manifest: "priv/static/cache_manifest.json"
 
-config :freethyme, FreethymeWeb.Endpoint,
+config :overstats, FreethymeWeb.Endpoint,
   url: [host: "overstats.gigalixirapp.com", port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json",
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
-  check_origin: ["//freethyme.gigalixirapp.com"]
+  check_origin: ["//overstats.gigalixirapp.com"]
 
 # Configures Swoosh API Client
 config :swoosh, :api_client, Overstats.Finch
